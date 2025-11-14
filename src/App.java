@@ -48,7 +48,7 @@ public class App {
                     cadastrarFilme(raizFilmes, arqIdFilme);
                     break;
                 case 2://buscar
-
+                    buscarFilme(raizFilmes, arqIdFilme);
                     break;
                 case 3://listar
                     break;
@@ -98,10 +98,10 @@ public class App {
 
     private static boolean gravaFilme(Filme f, String raizFilmes) {
         try {
-            PrintWriter pw = new PrintWriter(raizFilmes + f.id); //o id é o nome do arquivo
+            PrintWriter pw = new PrintWriter(raizFilmes + f.id);
             pw.append("ID: " + f.id + "\n");
             pw.append("Nome: " + f.nome + "\n");
-            pw.append("Data: " + f.data.dia + "/" + f.data.mês + "/" + f.data.ano + "\n");
+            pw.append("Estreia: " + f.data.dia + "/" + f.data.mês + "/" + f.data.ano + "\n");
             pw.append("Duração: " + f.tempo.horas + "h " + f.tempo.minutos + "m\n");
             for (int i = 0; i < 10; i++) {
                 if (f.genero[i] != null) {
@@ -127,6 +127,24 @@ public class App {
         }
     }
 
+    private static void buscarFilme(String raizFilmes, String arqIdFilme) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("\nQual tipo de buscar você quer utilizar: ");
+        menuDeBusca();
+        int opcao = sc.nextInt();
+        switch (opcao) {
+            case 1:
+                buscaPorId("filme", raizFilmes);
+                break;
+            case 2:
+               buscaPorNome("filme", raizFilmes);
+                break;
+            case 3:
+                buscaPorAno("filme", raizFilmes);
+                break;
+        }
+    }
+
     private static void gerenciarSeries(String raizSeries, String arqIdSerie) {
         Scanner sc = new Scanner(System.in);
         int opcao;
@@ -135,9 +153,10 @@ public class App {
             opcao = sc.nextInt();
             switch (opcao) {
                 case 1: //cadastrar
-                    cadastrarSérie(raizSeries, arqIdSerie);
+                    cadastrarSerie(raizSeries, arqIdSerie);
                     break;
                 case 2://buscar
+                    buscarSerie(raizSeries, arqIdSerie);
                     break;
                 case 3://listar
                     break;
@@ -189,7 +208,7 @@ public class App {
             PrintWriter pw = new PrintWriter(raizSeries + s.id); //o id é o nome do arquivo
             pw.append("ID: " + s.id + "\n");
             pw.append("Nome: " + s.nome + "\n");
-            pw.append("Data: " + s.data.dia + "/" + s.data.mês + "/" + s.data.ano + "\n");
+            pw.append("Estreia: " + s.data.dia + "/" + s.data.mês + "/" + s.data.ano + "\n");
             pw.append("Temporadas: " + s.temporadas + "\n");
             pw.append("Episódios: " + s.episodios + "\n");
             for (int i = 0; i < 10; i++) {
@@ -206,13 +225,31 @@ public class App {
         return true;
     }
 
-    private static void cadastrarSérie(String raizSeries, String arqIdSerie) {
+    private static void cadastrarSerie(String raizSeries, String arqIdSerie) {
         int id = leId(arqIdSerie);
         Série s = criaSerie(id);
         if (gravaSerie(s, raizSeries)) {
             gravaId(++id, arqIdSerie);
         } else {
             System.out.println("Não foi possível gravar a série!");
+        }
+    }
+
+    private static void buscarSerie(String raizSeries, String arqIdSerie) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("\nQual tipo de buscar você quer utilizar: ");
+        menuDeBusca();
+        int opcao = sc.nextInt();
+        switch (opcao) {
+            case 1:
+                buscaPorId("série", raizSeries);
+                break;
+            case 2:
+                buscaPorNome("série", raizSeries);
+                break;
+            case 3:
+                buscaPorAno("série", raizSeries);
+                break;
         }
     }
 
@@ -265,6 +302,15 @@ public class App {
                 + "\n-----------------------");
         System.out.println("Opção: ");
 
+    }
+
+    private static void menuDeBusca() {
+        System.out.println("\n-----------------------" +
+                "\n1) Id" +
+                "\n2) Nome" +
+                "\n3) Ano de Lançamento" +
+                "\n-----------------------");
+        System.out.println("Opção: ");
     }
 
     private static void iniciarResetar(String raiz, String raizFilmes, String raizSeries, String raizUsuarios,
@@ -324,11 +370,174 @@ public class App {
     private static void apagaArquivos(File dir) {
         File[] arquivos = dir.listFiles();
         if (arquivos != null) {
-        for (File f : arquivos) {
-            f.delete();
-        }
+            for (File f : arquivos) {
+                f.delete();
+            }
         }
     }
+
+    private static void buscaPorId(String tipo, String raiz){
+        Scanner sc = new Scanner(System.in);
+        if(tipo.equals("filme")){
+            System.out.println("Informe o Id do filme que deseja buscar: ");
+        }
+        if(tipo.equals("série")) {
+            System.out.println("Informe o Id da série que deseja buscar: ");
+        }
+        int id = sc.nextInt();
+        BufferedReader br;
+        try {
+            br = new BufferedReader(new FileReader(raiz + id));
+            if (tipo.equals("filme")) {
+                System.out.println("\n--- Filme encontrado (" + id + ") ---");
+            }
+            if (tipo.equals("série")) {
+                System.out.println("\n--- Série encontrada (" + id + ") ---");
+            }
+            String linha;
+            while ((linha = br.readLine()) != null) {
+                System.out.println(linha);
+            }
+        } catch (FileNotFoundException e) {
+            if(tipo.equals("filme")) {
+                System.out.println("Nenhum filme cadastrado.");
+            }
+            if(tipo.equals("série")){
+                System.out.println("Nenhuma série cadastrada.");
+            }
+        } catch (IOException e) {
+            System.out.println("Erro ao ler o arquivo: id");
+        }
+    }
+    private static void buscaPorNome(String tipo, String raiz) {
+        Scanner sc = new Scanner(System.in);
+        if(tipo.equals("filme")){
+            System.out.println("Informe o nome do filme que deseja buscar: ");
+        }
+        if(tipo.equals("série")){
+            System.out.println("Informe o nome da série que deseja buscar: ");
+        }
+        String nome = sc.nextLine();
+        File pasta = new File(raiz);
+        File[] arquivos = pasta.listFiles();
+        if (arquivos == null || arquivos.length == 0) {
+            if(tipo.equals("filme")) {
+                System.out.println("Nenhum filme cadastrado.");
+            }
+            if(tipo.equals("série")){
+                System.out.println("Nenhuma série cadastrada.");
+            }
+            return;
+        }
+        boolean encontrado = false;
+        for (File arq : arquivos) {
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(arq));
+                String linha;
+                String nomeFilme = "";
+
+                while ((linha = br.readLine()) != null) {
+                    if (linha.startsWith("Nome:")) {
+                        nomeFilme = linha.substring(6);
+                        break;
+                    }
+                }
+                br.close();
+                if (nomeFilme.contains(nome)) {
+                    encontrado = true;
+                    if(tipo.equals("filme")) {
+                        System.out.println("\n--- Filme encontrado (" + arq.getName() + ") ---");
+                    }
+                    if(tipo.equals("série")){
+                        System.out.println("\n--- Série encontrada (" + arq.getName() + ") ---");
+                    }
+                    BufferedReader br2 = new BufferedReader(new FileReader(arq));
+                    while ((linha = br2.readLine()) != null) {
+                        System.out.println(linha);
+                    }
+                    br2.close();
+                }
+
+            } catch (Exception e) {
+                System.out.println("Erro ao ler arquivo: " + arq.getName());
+            }
+        }
+
+        if (!encontrado) {
+            System.out.println("Nenhum filme encontrado com esse nome.");
+        }
+    }
+
+    private static void buscaPorAno(String tipo, String raiz){
+        Scanner sc = new Scanner(System.in);
+        if(tipo.equals("filme")) {
+            System.out.println("Informe o ano do filme que deseja buscar: ");
+        }
+        if(tipo.equals("série")){
+            System.out.println("Informe o ano da série que deseja buscar: ");
+        }
+
+        int ano = sc.nextInt();
+
+        File pasta = new File(raiz);
+        File[] arquivos = pasta.listFiles();
+
+        if (arquivos == null || arquivos.length == 0) {
+            if(tipo.equals("filme")) {
+                System.out.println("Nenhum filme cadastrado.");
+            }
+            if(tipo.equals("série")){
+                System.out.println("Nenhuma série cadastrada.");
+            }
+            return;
+        }
+
+        boolean encontrado = false;
+
+        for (File arq : arquivos) {
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(arq));
+                String linha;
+                int anoFilme = -1;
+
+                // Procura a linha "Data: DD/MM/AAAA"
+                while ((linha = br.readLine()) != null) {
+                    if (linha.startsWith("Data:")) {
+                        // Exemplo: "Data: 12/05/2015"
+                        String dataStr = linha.substring(6).trim();
+
+                        // Divide a data
+                        String[] partes = dataStr.split("/");
+
+                        // Ano é a última parte
+                        anoFilme = Integer.parseInt(partes[2]);
+                        break;
+                    }
+                }
+                br.close();
+                if (anoFilme == ano) {
+                    encontrado = true;
+                    if(tipo.equals("filme")) {
+                        System.out.println("\n--- Filme encontrado (" + arq.getName() + ") ---");
+                    }
+                    if(tipo.equals("série")) {
+                        System.out.println("\n--- Série encontrada (" + arq.getName() + ") ---");
+                    }
+                    BufferedReader br2 = new BufferedReader(new FileReader(arq));
+                    while ((linha = br2.readLine()) != null) {
+                        System.out.println(linha);
+                    }
+                    br2.close();
+                }
+            } catch (Exception e) {
+                System.out.println("Erro ao ler arquivo: " + arq.getName());
+            }
+        }
+        if (!encontrado) {
+            System.out.println("Nenhum filme encontrado para este ano.");
+        }
+    }
+
 }
 
 
