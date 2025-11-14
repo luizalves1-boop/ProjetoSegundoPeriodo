@@ -51,10 +51,13 @@ public class App {
                     buscarFilme(raizFilmes, arqIdFilme);
                     break;
                 case 3://listar
+
                     break;
                 case 4://atualizar
+
                     break;
                 case 5://apagar
+
                     break;
                 case 6://voltar
                     System.out.println("Voltando");
