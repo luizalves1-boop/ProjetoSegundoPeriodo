@@ -48,6 +48,7 @@ public class App {
                     cadastrarFilme(raizFilmes, arqIdFilme);
                     break;
                 case 2://buscar
+
                     break;
                 case 3://listar
                     break;
@@ -60,16 +61,6 @@ public class App {
                     break;
             }
         } while (opcao != 6);
-    }
-
-    private static void cadastrarFilme(String raizFilmes, String arqIdFilme) {
-        int id = leId(arqIdFilme);
-        Filme f = criaFilme(id);
-        if (gravaFilme(f, raizFilmes)) {
-            gravaId(++id, arqIdFilme);
-        } else {
-            System.out.println("Não foi possível gravar o contato!");
-        }
     }
 
     private static Filme criaFilme(int id) {
@@ -111,7 +102,7 @@ public class App {
             pw.append("ID: " + f.id + "\n");
             pw.append("Nome: " + f.nome + "\n");
             pw.append("Data: " + f.data.dia + "/" + f.data.mês + "/" + f.data.ano + "\n");
-            pw.append("Duração: "+ f.tempo.horas + "h "+ f.tempo.minutos+ "m\n");
+            pw.append("Duração: " + f.tempo.horas + "h " + f.tempo.minutos + "m\n");
             for (int i = 0; i < 10; i++) {
                 if (f.genero[i] != null) {
                     pw.append("Gênero " + (i + 1) + ": " + f.genero[i] + "\n");
@@ -123,8 +114,17 @@ public class App {
             e.printStackTrace();
             return false;
         }
-
         return true;
+    }
+
+    private static void cadastrarFilme(String raizFilmes, String arqIdFilme) {
+        int id = leId(arqIdFilme);
+        Filme f = criaFilme(id);
+        if (gravaFilme(f, raizFilmes)) {
+            gravaId(++id, arqIdFilme);
+        } else {
+            System.out.println("Não foi possível gravar o filme!");
+        }
     }
 
     private static void gerenciarSeries(String raizSeries, String arqIdSerie) {
@@ -135,6 +135,7 @@ public class App {
             opcao = sc.nextInt();
             switch (opcao) {
                 case 1: //cadastrar
+                    cadastrarSérie(raizSeries, arqIdSerie);
                     break;
                 case 2://buscar
                     break;
@@ -149,6 +150,70 @@ public class App {
                     break;
             }
         } while (opcao != 6);
+    }
+
+    private static Série criaSerie(int id) {
+        Scanner sc = new Scanner(System.in);
+        Série s = new Série();
+        s.id = id;
+        System.out.println("Informe o nome da série: ");
+        s.nome = sc.nextLine();
+        System.out.println("Informe a data de estréia da série (DD/MM/AAAA): ");
+        int data = sc.nextInt();
+        s.data = new Estreia();
+        s.data.dia = data / 1000000;
+        s.data.mês = (data % 1000000) / 10000;
+        s.data.ano = (data % 1000000) % 10000;
+        System.out.println("Informe quantas temporadas têm a série: ");
+        s.temporadas = sc.nextInt();
+        System.out.println("Informe quantos episódios totais têm a série: ");
+        s.episodios = sc.nextInt();
+        s.genero = new String[10];
+        int i = 0;
+        char opcao;
+        sc.nextLine();
+        do {
+            System.out.print("Gênero: ");
+            s.genero[i] = sc.nextLine();
+            i++;
+            System.out.print("Quer adicionar mais um gênero a essa série? (s/n): ");
+            opcao = sc.next().charAt(0);
+            sc.nextLine();
+        } while (opcao == 's' && i <= 10);
+
+        return s;
+    }
+
+    private static boolean gravaSerie(Série s, String raizSeries) {
+        try {
+            PrintWriter pw = new PrintWriter(raizSeries + s.id); //o id é o nome do arquivo
+            pw.append("ID: " + s.id + "\n");
+            pw.append("Nome: " + s.nome + "\n");
+            pw.append("Data: " + s.data.dia + "/" + s.data.mês + "/" + s.data.ano + "\n");
+            pw.append("Temporadas: " + s.temporadas + "\n");
+            pw.append("Episódios: " + s.episodios + "\n");
+            for (int i = 0; i < 10; i++) {
+                if (s.genero[i] != null) {
+                    pw.append("Gênero " + (i + 1) + ": " + s.genero[i] + "\n");
+                }
+            }
+            pw.flush();
+            pw.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    private static void cadastrarSérie(String raizSeries, String arqIdSerie) {
+        int id = leId(arqIdSerie);
+        Série s = criaSerie(id);
+        if (gravaSerie(s, raizSeries)) {
+            gravaId(++id, arqIdSerie);
+        } else {
+            System.out.println("Não foi possível gravar a série!");
+        }
     }
 
     private static void gerenciarUsuarios(String raizFilmes, String raizSeries, String raizUsuarios, String arqIdFilme, String arqIdSerie, String arqIdUsuario) {
@@ -257,10 +322,11 @@ public class App {
     }
 
     private static void apagaArquivos(File dir) {
-        String[] arquivos = dir.list();
-        for (String s : arquivos) {
-            File f = new File(s);
+        File[] arquivos = dir.listFiles();
+        if (arquivos != null) {
+        for (File f : arquivos) {
             f.delete();
+        }
         }
     }
 }
