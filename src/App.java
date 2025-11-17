@@ -58,7 +58,7 @@ public class App {
                     atualizar("filme", raizFilmes);
                     break;
                 case 5://apagar
-
+                    apagarFS("filme", raizFilmes);
                     break;
                 case 6://voltar
                     System.out.println("Voltando");
@@ -66,6 +66,8 @@ public class App {
             }
         } while (opcao != 6);
     }
+
+
 
     private static Filme criarEditarFilme(int id) {
         Scanner sc = new Scanner(System.in);
@@ -169,6 +171,7 @@ public class App {
                     atualizar("série", raizSeries);
                     break;
                 case 5://apagar
+                    apagarFS("série", raizSeries);
                     break;
                 case 6://voltar
                     System.out.println("Voltando");
@@ -626,7 +629,7 @@ public class App {
                 }
                 String nome = sc.nextLine();
                 if (tipo.equals("filme")) {
-                    int id2 = teste(tipo, raiz, nome);
+                    int id2 = enviarIdNome(tipo, raiz, nome);
                     if(id2 != -1){
                         System.out.println("Escreva novamente as informações do filme: ");
                         Filme f = criarEditarFilme(id2);
@@ -637,7 +640,7 @@ public class App {
 
                 }
                 if (tipo.equals("série")) {
-                    int id2 = teste(tipo, raiz, nome);
+                    int id2 = enviarIdNome(tipo, raiz, nome);
                     if(id2 != -1) {
                         System.out.println("Escreva novamente as informações da série: ");
                         Série s = criarEditarSerie(id2);
@@ -653,7 +656,7 @@ public class App {
         }
     }
 
-    public static int teste(String tipo, String raiz, String nome) {
+    public static int enviarIdNome(String tipo, String raiz, String nome) {
         File pasta = new File(raiz);
         File[] arquivos = pasta.listFiles();
         if (arquivos == null || arquivos.length == 0) {
@@ -698,5 +701,45 @@ public class App {
         }
         return -1;
     }
+
+    private static void apagarFS(String tipo, String raiz) {
+        Scanner sc = new Scanner(System.in);
+        if(tipo.equals("filme")){
+            System.out.println("Informe o tipo de exclusão que quer seguir: ");
+            menuDeBusca();
+            int opcao = sc.nextInt();
+            apagarPorId("filme", raiz);
+        }
+        if(tipo.equals("série")){
+            apagarPorId("série", raiz);
+        }
+    }
+
+    private static void apagarPorId(String tipo, String raiz) {
+        Scanner sc = new Scanner(System.in);
+        if(tipo.equals("filme")) {
+            System.out.println("Informe o id do filme que quer excluir: ");
+            int id = sc.nextInt();
+            File dir = new File(raiz + id);
+            dir.delete();
+            if(dir.delete()){
+                System.out.println("O filme foi excluído com sucesso!");
+            } else{
+                System.out.println("O filme não pôde ser excluído!");
+            }
+        }
+        if(tipo.equals("série")){
+            System.out.println("Informe o id da série que quer excluir: ");
+            int id = sc.nextInt();
+            File dir = new File(raiz + id);
+            dir.delete();
+            if(dir.delete()){
+                System.out.println("A série foi excluída com sucesso!");
+            } else{
+                System.out.println("A série não pôde ser excluída!");
+            }
+        }
+    }
+
 }
 
