@@ -68,7 +68,6 @@ public class App {
     }
 
 
-
     private static Filme criarEditarFilme(int id) {
         Scanner sc = new Scanner(System.in);
         Filme f = new Filme();
@@ -630,7 +629,7 @@ public class App {
                 String nome = sc.nextLine();
                 if (tipo.equals("filme")) {
                     int id2 = enviarIdNome(tipo, raiz, nome);
-                    if(id2 != -1){
+                    if (id2 != -1) {
                         System.out.println("Escreva novamente as informações do filme: ");
                         Filme f = criarEditarFilme(id2);
                         gravarFilme(f, raiz);
@@ -641,7 +640,7 @@ public class App {
                 }
                 if (tipo.equals("série")) {
                     int id2 = enviarIdNome(tipo, raiz, nome);
-                    if(id2 != -1) {
+                    if (id2 != -1) {
                         System.out.println("Escreva novamente as informações da série: ");
                         Série s = criarEditarSerie(id2);
                         gravarSerie(s, raiz);
@@ -683,14 +682,15 @@ public class App {
                         break;
                     }
                 }
-
-                while ((linha = br.readLine()) != null) {
-                    if (linha.startsWith("Id:")) {
+                BufferedReader br2 = new BufferedReader(new FileReader(arq));
+                while ((linha = br2.readLine()) != null) {
+                    if (linha.startsWith("ID:")) {
                         id2 = linha.substring(4);
                         id = Integer.parseInt(id2);
                     }
                 }
                 br.close();
+                br2.close();
                 if (nomeFilme.contains(nome)) {
                     return id;
                 }
@@ -704,38 +704,79 @@ public class App {
 
     private static void apagarFS(String tipo, String raiz) {
         Scanner sc = new Scanner(System.in);
-        if(tipo.equals("filme")){
-            System.out.println("Informe o tipo de exclusão que quer seguir: ");
-            menuDeBusca();
-            int opcao = sc.nextInt();
-            apagarPorId("filme", raiz);
+        System.out.println("Informe o tipo de exclusão que quer seguir: ");
+        menuDeBusca();
+        int opcao = sc.nextInt();
+        if (tipo.equals("filme")) {
+            switch (opcao) {
+                case 1:
+                    apagarPorId("filme", raiz);
+                    break;
+                case 2:
+                    apagarPorNome("filme", raiz);
+            }
+
         }
-        if(tipo.equals("série")){
-            apagarPorId("série", raiz);
+        if (tipo.equals("série")) {
+            switch (opcao) {
+                case 1:
+                    apagarPorId("série", raiz);
+                    break;
+                case 2:
+                    apagarPorNome("série", raiz);
+            }
+
         }
     }
 
     private static void apagarPorId(String tipo, String raiz) {
         Scanner sc = new Scanner(System.in);
-        if(tipo.equals("filme")) {
+        if (tipo.equals("filme")) {
             System.out.println("Informe o id do filme que quer excluir: ");
             int id = sc.nextInt();
             File dir = new File(raiz + id);
-            dir.delete();
-            if(dir.delete()){
+            if (dir.delete()) {
+                dir.delete();
                 System.out.println("O filme foi excluído com sucesso!");
-            } else{
+            } else {
                 System.out.println("O filme não pôde ser excluído!");
             }
         }
-        if(tipo.equals("série")){
+        if (tipo.equals("série")) {
             System.out.println("Informe o id da série que quer excluir: ");
             int id = sc.nextInt();
             File dir = new File(raiz + id);
-            dir.delete();
-            if(dir.delete()){
+            if (dir.delete()) {
+                dir.delete();
                 System.out.println("A série foi excluída com sucesso!");
-            } else{
+            } else {
+                System.out.println("A série não pôde ser excluída!");
+            }
+        }
+    }
+    private static void apagarPorNome(String tipo, String raiz) {
+        Scanner sc = new Scanner(System.in);
+        if (tipo.equals("filme")) {
+            System.out.println("Informe o nome do filme que quer excluir: ");
+            String nome = sc.nextLine();
+            int id = enviarIdNome(tipo, raiz, nome);
+            File dir = new File(raiz + id);
+            if (dir.delete()) {
+                dir.delete();
+                System.out.println("O filme foi excluído com sucesso!");
+            } else {
+                System.out.println("O filme não pôde ser excluído!");
+            }
+        }
+        if (tipo.equals("série")) {
+            System.out.println("Informe o nome da série que quer excluir: ");
+            String nome = sc.nextLine();
+            int id = enviarIdNome(tipo, raiz, nome);
+            File dir = new File(raiz + id);
+            if (dir.delete()) {
+                dir.delete();
+                System.out.println("A série foi excluída com sucesso!");
+            } else {
                 System.out.println("A série não pôde ser excluída!");
             }
         }
