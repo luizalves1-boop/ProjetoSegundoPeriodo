@@ -147,7 +147,7 @@ public class App {
     private static void menuSecundario(String menu) {
         System.out.println("\n" + menu);
         System.out.println("-----------------------"
-                + "\n1) Criar"
+                + "\n1) Adicionar"
                 + "\n2) Buscar"
                 + "\n3) Listar"
                 + "\n4) Atualizar"
@@ -220,7 +220,7 @@ public class App {
             opcao = sc.nextInt();
             switch (opcao) {
                 case 1: //cadastrar
-                    cadastrarFilme(filmes, raizFilmes, arqIdFilme);
+                    cadastrarFilme("adicionar", filmes, raizFilmes, arqIdFilme);
                     break;
                 case 2://buscar
                     buscarFilme(filmes, raizFilmes, arqIdFilme);
@@ -229,7 +229,7 @@ public class App {
                     listarFilme(filmes, raizFilmes);
                     break;
                 case 4://atualizar
-                    atualizarFilme(filmes, raizFilmes);
+                    atualizarFilme(filmes, raizFilmes, arqIdFilme);
                     break;
                 case 5://apagar
                     break;
@@ -243,7 +243,7 @@ public class App {
         } while (opcao != 6);
     }
 
-    private static Filme criarFilme(int id) {
+    private static Filme adicionarEditarFilme(int id) {
         Scanner sc = new Scanner(System.in);
         Filme f = new Filme();
         f.id = id;
@@ -288,7 +288,7 @@ public class App {
                 if (f.genero[i] != null) {
                     pw.append(f.genero[i]);
                 }
-                if (i < (f.genero.length -1) && f.genero[i+1] != null) {
+                if (i < (f.genero.length - 1) && f.genero[i + 1] != null) {
                     pw.append("/");
                 }
             }
@@ -301,27 +301,46 @@ public class App {
         return true;
     }
 
-    private static void cadastrarFilme(ArrayList<Filme> filmes, String raizFilmes, String arqIdFilme) {
+    private static void cadastrarFilme(String tipo, ArrayList<Filme> filmes, String raizFilmes, String arqIdFilme) {
         int id = leId(arqIdFilme);
-        Filme f = criarFilme(id);
+        Filme f = adicionarEditarFilme(id);
+        int id2 = f.id;
         if (gravarFilme(f, raizFilmes)) {
-            leFilme(filmes, f, id, raizFilmes);
-            gravaId(++id, arqIdFilme);
+            leFilme("adicionar", filmes, f, id, raizFilmes);
+            if(tipo.equals("adicionar")){
+                gravaId(++id, arqIdFilme);
+            } else if(tipo.equals("atualizar")){
+                gravaId(id2, arqIdFilme);
+            }
         } else {
             System.out.println("Não foi possível gravar o filme!");
         }
         System.out.println();
     }
 
-    public static void leFilme(ArrayList<Filme> filmes, Filme f, int id, String arquivo) {
-        BufferedReader br;
-        try {
-            br = new BufferedReader(new FileReader(arquivo + id));
+    public static void editarFilme(ArrayList<Filme> filmes, String raizFilmes, int id) {
+        Filme f = adicionarEditarFilme(id);
+        if (gravarFilme(f, raizFilmes)) {
+            leFilme("atualizar", filmes, f, id, raizFilmes);
+        }
+    }
+
+
+    public static void leFilme(String tipo, ArrayList<Filme> filmes, Filme f, int id, String arquivo) {
+        if (tipo.equals("adicionar")) {
             filmes.add(f);
-            br.close();
-        } catch (IOException | NumberFormatException e) {
-            System.out.println("Erro ao ler o id");
-            e.printStackTrace();
+        } else if (tipo.equals("atualizar")) {
+            boolean encontrado = false;
+            for (int i = 0; i < filmes.size(); i++) {
+                if (filmes.get(i).id == id) {
+                    filmes.set(i, f);
+                    encontrado = true;
+                    break;
+                }
+            }
+            if (!encontrado) {
+                System.out.println("Filme com ID " + id + " não encontrado para atualização.");
+            }
         }
     }
 
@@ -334,7 +353,7 @@ public class App {
         for (int i = 0; i < f.genero.length; i++) {
             if (f.genero[i] != null && !f.genero[i].isEmpty()) {
                 System.out.print(f.genero[i]);
-                if (i < (f.genero.length -1) && f.genero[i+1] != null) {
+                if (i < (f.genero.length - 1) && f.genero[i + 1] != null) {
                     System.out.print("/");
                 }
             }
@@ -512,8 +531,16 @@ public class App {
         }
     }
 
-    private static void atualizarFilme(ArrayList<Filme> filmes, String raizFilmes) {
-
+    private static void atualizarFilme(ArrayList<Filme> filmes, String raizFilmes, String arqIdFilme) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Informe o ID do filme que você quer atualizar: ");
+        int id = sc.nextInt();
+        for (Filme f : filmes) {
+            if (f.id == id) {
+                System.out.println("Informe as novas informações do filme");
+                editarFilme(filmes, raizFilmes, id);
+            }
+        }
     }
 }
 
