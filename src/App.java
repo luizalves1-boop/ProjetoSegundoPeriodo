@@ -223,15 +223,16 @@ public class App {
                     cadastrarFilme("adicionar", filmes, raizFilmes, arqIdFilme);
                     break;
                 case 2://buscar
-                    buscarFilme(filmes, raizFilmes, arqIdFilme);
+                    buscarFilme(filmes, raizFilmes);
                     break;
                 case 3://listar
                     listarFilme(filmes, raizFilmes);
                     break;
                 case 4://atualizar
-                    atualizarFilme(filmes, raizFilmes, arqIdFilme);
+                    atualizarFilme(filmes, raizFilmes);
                     break;
                 case 5://apagar
+                    excluirFilme(filmes, raizFilmes);
                     break;
                 case 6://voltar
                     System.out.println("Voltando");
@@ -307,9 +308,9 @@ public class App {
         int id2 = f.id;
         if (gravarFilme(f, raizFilmes)) {
             leFilme("adicionar", filmes, f, id, raizFilmes);
-            if(tipo.equals("adicionar")){
+            if (tipo.equals("adicionar")) {
                 gravaId(++id, arqIdFilme);
-            } else if(tipo.equals("atualizar")){
+            } else if (tipo.equals("atualizar")) {
                 gravaId(id2, arqIdFilme);
             }
         } else {
@@ -361,7 +362,7 @@ public class App {
         System.out.println();
     }
 
-    private static void buscarFilme(ArrayList<Filme> filmes, String raizFilmes, String arqIdFilme) {
+    private static void buscarFilme(ArrayList<Filme> filmes, String raizFilmes) {
         Scanner sc = new Scanner(System.in);
         System.out.println("\nInforme qual tipo de buscar você quer utilizar: ");
         menuDeBusca();
@@ -531,7 +532,7 @@ public class App {
         }
     }
 
-    private static void atualizarFilme(ArrayList<Filme> filmes, String raizFilmes, String arqIdFilme) {
+    private static void atualizarFilme(ArrayList<Filme> filmes, String raizFilmes) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Informe o ID do filme que você quer atualizar: ");
         int id = sc.nextInt();
@@ -539,6 +540,24 @@ public class App {
             if (f.id == id) {
                 System.out.println("Informe as novas informações do filme");
                 editarFilme(filmes, raizFilmes, id);
+            }
+        }
+    }
+
+    private static void excluirFilme(ArrayList<Filme> filmes, String raizFilmes) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Informe o ID do filme que você quer excluir: ");
+        int id = sc.nextInt();
+        File dir = new File(raizFilmes + id);
+        for (int i = 0; i < filmes.size(); i++) {
+            if (filmes.get(i).id == id) {
+                if (dir.delete()) {
+                    filmes.remove(i);
+                    System.out.println("O filme foi excluído com sucesso!");
+                } else {
+                    System.out.println("O filme não pôde ser excluído!");
+                }
+                return;
             }
         }
     }
