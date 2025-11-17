@@ -1,5 +1,5 @@
 public class Estreia {
     int dia;
-    int mês;
+    int mes;
     int ano;
 }

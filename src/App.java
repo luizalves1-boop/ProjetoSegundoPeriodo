@@ -37,9 +37,13 @@ public class App {
                 case 5:
                     System.out.println("Saindo...");
                     break;
+                default:
+                    System.out.println("Essa opção não existe!");
+                    break;
             }
         } while (opcao != 5);
     }
+
     private static void carregarFilmesNoArray(ArrayList<Filme> filmes, String raizFilmes) {
         File dir = new File(raizFilmes);
         if (!dir.exists() || !dir.isDirectory()) {
@@ -66,7 +70,7 @@ public class App {
                             String[] partes = dataStr.split("/");
                             f.data = new Estreia();
                             f.data.dia = Integer.parseInt(partes[0]);
-                            f.data.mês = Integer.parseInt(partes[1]);
+                            f.data.mes = Integer.parseInt(partes[1]);
                             f.data.ano = Integer.parseInt(partes[2]);
                         } else if (linha.startsWith("Duração:")) {
                             String duracaoStr = linha.substring(9).trim(); // ex: "2h 30m"
@@ -158,7 +162,8 @@ public class App {
         System.out.println("\n-----------------------" +
                 "\n1) Id" +
                 "\n2) Nome" +
-                "\n3) Ano de Lançamento" +
+                "\n3) Data de Lançamento" +
+                "\n4) Gênero" +
                 "\n-----------------------");
         System.out.println("Opção: ");
     }
@@ -224,11 +229,15 @@ public class App {
                     listarFilme(filmes, raizFilmes);
                     break;
                 case 4://atualizar
+                    atualizarFilme(filmes, raizFilmes);
                     break;
                 case 5://apagar
                     break;
                 case 6://voltar
                     System.out.println("Voltando");
+                    break;
+                default:
+                    System.out.println("Essa opção não existe!");
                     break;
             }
         } while (opcao != 6);
@@ -244,7 +253,7 @@ public class App {
         int data = sc.nextInt();
         f.data = new Estreia();
         f.data.dia = data / 1000000;
-        f.data.mês = (data % 1000000) / 10000;
+        f.data.mes = (data % 1000000) / 10000;
         f.data.ano = (data % 1000000) % 10000;
         System.out.println("Informe qual a minutagem total do filme: ");
         int min = sc.nextInt();
@@ -272,12 +281,15 @@ public class App {
             PrintWriter pw = new PrintWriter(raizFilmes + f.id);
             pw.append("ID: " + f.id + "\n");
             pw.append("Nome: " + f.nome + "\n");
-            pw.append("Estreia: " + f.data.dia + "/" + f.data.mês + "/" + f.data.ano + "\n");
+            pw.append("Estreia: " + f.data.dia + "/" + f.data.mes + "/" + f.data.ano + "\n");
             pw.append("Duração: " + f.tempo.horas + "h " + f.tempo.minutos + "m\n");
             pw.append("Gêneros: ");
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < f.genero.length; i++) {
                 if (f.genero[i] != null) {
-                    pw.append(f.genero[i] + "/");
+                    pw.append(f.genero[i]);
+                }
+                if (i < (f.genero.length -1) && f.genero[i+1] != null) {
+                    pw.append("/");
                 }
             }
             pw.flush();
@@ -313,9 +325,26 @@ public class App {
         }
     }
 
+    private static void escreverFilme(Filme f) {
+        System.out.println("ID: " + f.id);
+        System.out.println("Nome: " + f.nome);
+        System.out.println("Estreia: " + f.data.dia + "/" + f.data.mes + "/" + f.data.ano);
+        System.out.println("Duração: " + f.tempo.horas + "h " + f.tempo.minutos + "m");
+        System.out.print("Gêneros: ");
+        for (int i = 0; i < f.genero.length; i++) {
+            if (f.genero[i] != null && !f.genero[i].isEmpty()) {
+                System.out.print(f.genero[i]);
+                if (i < (f.genero.length -1) && f.genero[i+1] != null) {
+                    System.out.print("/");
+                }
+            }
+        }
+        System.out.println();
+    }
+
     private static void buscarFilme(ArrayList<Filme> filmes, String raizFilmes, String arqIdFilme) {
         Scanner sc = new Scanner(System.in);
-        System.out.println("\nQual tipo de buscar você quer utilizar: ");
+        System.out.println("\nInforme qual tipo de buscar você quer utilizar: ");
         menuDeBusca();
         int opcao = sc.nextInt();
         switch (opcao) {
@@ -326,20 +355,31 @@ public class App {
                 buscaPorNomeFilme(filmes, raizFilmes);
                 break;
             case 3:
-                buscaPorAnoFilme(filmes, raizFilmes);
+                buscaPorDataFilme(filmes, raizFilmes);
+                break;
+            case 4:
+                buscarPorGeneroFilme(filmes, raizFilmes);
+                break;
+            default:
+                System.out.println("Essa opção não existe!");
                 break;
         }
     }
 
     private static void buscaPorIdFilme(ArrayList<Filme> filmes, String raiz) {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Informe o Id do filme que deseja buscar: ");
+        System.out.println("Informe o ID do filme que deseja buscar: ");
         int id = sc.nextInt();
+        boolean encontrado = false;
         for (Filme f : filmes) {
             if (f.id == id) {
                 System.out.println("\n--- Filme encontrado (" + f.id + ") ---");
                 escreverFilme(f);
+                encontrado = true;
             }
+        }
+        if (!encontrado) {
+            System.out.println("Não foi possível encontrar um filme com esse ID.");
         }
     }
 
@@ -347,23 +387,66 @@ public class App {
         Scanner sc = new Scanner(System.in);
         System.out.println("Informe o nome do filme que deseja buscar: ");
         String nome = sc.nextLine();
+        boolean encontrado = false;
         for (Filme f : filmes) {
             if (f.nome.equals(nome)) {
                 System.out.println("\n--- Filme encontrado (" + f.id + ") ---");
                 escreverFilme(f);
+                encontrado = true;
             }
+        }
+        if (!encontrado) {
+            System.out.println("Não foi possível encontrar um filme com esse nome.");
         }
 
     }
 
-    private static void buscaPorAnoFilme(ArrayList<Filme> filmes, String raiz) {
+    private static void buscaPorDataFilme(ArrayList<Filme> filmes, String raiz) {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Informe o ano do filme que deseja buscar: ");
-        int ano = sc.nextInt();
+        System.out.println("Informe a data do filme que deseja buscar: (DDMMAAAA)");
+        String data = sc.nextLine();
+        boolean encontrado = false;
         for (Filme f : filmes) {
-            if (f.data.ano == (ano)) {
+            String dia;
+            String mes;
+            if (f.data.dia < 10) {
+                dia = "0" + String.valueOf(f.data.dia);
+            } else {
+                dia = String.valueOf(f.data.dia);
+            }
+            if (f.data.mes < 10) {
+                mes = "0" + String.valueOf(f.data.mes);
+            } else {
+                mes = String.valueOf(f.data.mes);
+            }
+            String ano = String.valueOf(f.data.ano);
+            String dataf = dia + mes + ano;
+            if (dataf.equals(data)) {
                 System.out.println("\n--- Filme encontrado (" + f.id + ") ---");
                 escreverFilme(f);
+                encontrado = true;
+            }
+        }
+        if (!encontrado) {
+            System.out.println("Não foi possível encontrar um filme com essa data.");
+        }
+    }
+
+    private static void buscarPorGeneroFilme(ArrayList<Filme> filmes, String raiz) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Informe o Gênero do filme que deseja buscar: ");
+        String genero = sc.nextLine();
+        boolean encontrado = false;
+        for (Filme f : filmes) {
+            for (int i = 0; i < f.genero.length; i++) {
+                if (f.genero[i] != null && !f.genero[i].isEmpty() && f.genero[i].equals(genero)) {
+                    System.out.println("\n--- Filme encontrado (" + f.id + ") ---");
+                    escreverFilme(f);
+                    encontrado = true;
+                }
+            }
+            if (!encontrado) {
+                System.out.println("Não foi possível encontrar um filme com esse ID.");
             }
         }
     }
@@ -386,7 +469,8 @@ public class App {
                 listarDuracaoFilme(filmes, raizFilmes);
                 break;
             default:
-                return;
+                System.out.println("Essa opção não existe!");
+                break;
         }
     }
 
@@ -411,7 +495,7 @@ public class App {
     private static void listarDataFilme(ArrayList<Filme> filmes, String raiz) {
         System.out.println("\n--- Filmes ---");
         filmes.sort(Comparator.comparingInt((Filme f) -> f.data.ano)
-                .thenComparingInt(f -> f.data.mês)
+                .thenComparingInt(f -> f.data.mes)
                 .thenComparingInt(f -> f.data.dia));
         for (Filme f : filmes) {
             System.out.println("\n--- Filme(" + f.id + ") ---");
@@ -428,21 +512,8 @@ public class App {
         }
     }
 
-    private static void escreverFilme(Filme f) {
-        System.out.println("ID: " + f.id);
-        System.out.println("Nome: " + f.nome);
-        System.out.println("Estreia: " + f.data.dia + "/" + f.data.mês + "/" + f.data.ano);
-        System.out.println("Duração: " + f.tempo.horas + "h " + f.tempo.minutos + "m");
-        System.out.print("Gêneros: ");
-        for (int i = 0; i < f.genero.length; i++) {
-            if (f.genero[i] != null && !f.genero[i].isEmpty()) {
-                System.out.print(f.genero[i]);
-                if (i != f.genero.length - 1) {
-                    System.out.print("/");
-                }
-            }
-        }
-        System.out.println();
+    private static void atualizarFilme(ArrayList<Filme> filmes, String raizFilmes) {
+
     }
 }
 
