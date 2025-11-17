@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class Filme {
     int id;
     String nome;

@@ -1,4 +1,4 @@
-public class Série {
+public class Serie {
     int id;
     String nome;
     Estreia data;

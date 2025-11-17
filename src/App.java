@@ -1,6 +1,6 @@
 import java.io.*;
-import java.sql.SQLOutput;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Scanner;
 
 public class App {
@@ -13,14 +13,15 @@ public class App {
         String arqIdFilme = raiz + "idFilme.txt";
         String arqIdSerie = raiz + "idSerie.txt";
         String arqIdUsuario = raiz + "idUsuario.txt";
+        ArrayList<Filme> filmes = new ArrayList<>();
+        ArrayList<Serie> series = new ArrayList<>();
         int opcao;
-
         do {
             menuPrincipal();
             opcao = sc.nextInt();
             switch (opcao) {
                 case 1:
-                    gerenciarFilmes(raizFilmes, arqIdFilme);
+                    gerenciarFilmes(filmes, raizFilmes, arqIdFilme);
                     break;
                 case 2:
                     gerenciarSeries(raizSeries, arqIdSerie);
@@ -38,7 +39,7 @@ public class App {
         } while (opcao != 5);
     }
 
-    private static void gerenciarFilmes(String raizFilmes, String arqIdFilme) {
+    private static void gerenciarFilmes(ArrayList<Filme> filmes, String raizFilmes, String arqIdFilme) {
         Scanner sc = new Scanner(System.in);
         int opcao;
         do {
@@ -46,7 +47,7 @@ public class App {
             opcao = sc.nextInt();
             switch (opcao) {
                 case 1: //cadastrar
-                    cadastrarFilme(raizFilmes, arqIdFilme);
+                    cadastrarFilme(filmes, raizFilmes, arqIdFilme);
                     break;
                 case 2://buscar
                     buscarFilme(raizFilmes, arqIdFilme);
@@ -122,14 +123,16 @@ public class App {
         return true;
     }
 
-    private static void cadastrarFilme(String raizFilmes, String arqIdFilme) {
+    private static void cadastrarFilme(ArrayList<Filme> filmes, String raizFilmes, String arqIdFilme) {
         int id = leId(arqIdFilme);
         Filme f = criarEditarFilme(id);
         if (gravarFilme(f, raizFilmes)) {
+            leFilme(filmes, f, id, raizFilmes);
             gravaId(++id, arqIdFilme);
         } else {
             System.out.println("Não foi possível gravar o filme!");
         }
+        System.out.println();
     }
 
     private static void buscarFilme(String raizFilmes, String arqIdFilme) {
@@ -179,9 +182,9 @@ public class App {
         } while (opcao != 6);
     }
 
-    private static Série criarEditarSerie(int id) {
+    private static Serie criarEditarSerie(int id) {
         Scanner sc = new Scanner(System.in);
-        Série s = new Série();
+        Serie s = new Serie();
         s.id = id;
         System.out.println("Informe o nome da série: ");
         s.nome = sc.nextLine();
@@ -210,7 +213,7 @@ public class App {
         return s;
     }
 
-    private static boolean gravarSerie(Série s, String raizSeries) {
+    private static boolean gravarSerie(Serie s, String raizSeries) {
         try {
             PrintWriter pw = new PrintWriter(raizSeries + s.id); //o id é o nome do arquivo
             pw.append("ID: " + s.id + "\n");
@@ -234,7 +237,7 @@ public class App {
 
     private static void cadastrarSerie(String raizSeries, String arqIdSerie) {
         int id = leId(arqIdSerie);
-        Série s = criarEditarSerie(id);
+        Serie s = criarEditarSerie(id);
         if (gravarSerie(s, raizSeries)) {
             gravaId(++id, arqIdSerie);
         } else {
@@ -361,6 +364,18 @@ public class App {
             e.printStackTrace();
         }
         return -1;
+    }
+
+    public static void leFilme(ArrayList<Filme> filmes, Filme f, int id, String arquivo) {
+        BufferedReader br;
+        try {
+            br = new BufferedReader(new FileReader(arquivo + id));
+            filmes.add(f);
+            br.close();
+        } catch (IOException | NumberFormatException e) {
+            System.out.println("Erro ao ler o id");
+            e.printStackTrace();
+        }
     }
 
     private static void gravaId(int i, String arquivo) {
@@ -614,7 +629,7 @@ public class App {
                 }
                 if (tipo.equals("série")) {
                     System.out.println("Escreva novamente as informações da série: ");
-                    Série s = criarEditarSerie(id);
+                    Serie s = criarEditarSerie(id);
                     gravarSerie(s, raiz);
                 }
                 break;
@@ -642,7 +657,7 @@ public class App {
                     int id2 = enviarIdNome(tipo, raiz, nome);
                     if (id2 != -1) {
                         System.out.println("Escreva novamente as informações da série: ");
-                        Série s = criarEditarSerie(id2);
+                        Serie s = criarEditarSerie(id2);
                         gravarSerie(s, raiz);
                     } else {
                         System.out.println("Essa série não foi cadastrada.");
@@ -754,6 +769,7 @@ public class App {
             }
         }
     }
+
     private static void apagarPorNome(String tipo, String raiz) {
         Scanner sc = new Scanner(System.in);
         if (tipo.equals("filme")) {
