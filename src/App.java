@@ -1069,7 +1069,6 @@ public class App {
         }
     }
 
-
     private static void gerenciarUsuarios(ArrayList<Usuario> usuarios, String raizUsuarios, String arqIdUsuario) {
         Scanner sc = new Scanner(System.in);
         int opcao;
@@ -1183,21 +1182,22 @@ public class App {
 
     private static void logarUsuario(ArrayList<Usuario> usuarios) {
         boolean login = loginUsuario(usuarios);
-        if(login){
+        if (login) {
 
         } else {
             return;
         }
     }
 
-    public static boolean loginUsuario(ArrayList<Usuario> usuarios){
+    public static boolean loginUsuario(ArrayList<Usuario> usuarios) {
         Scanner sc = new Scanner(System.in);
         boolean login = false;
+        int tentativas = 0;
         System.out.println("Email: ");
         String email = sc.nextLine();
         do {
             for (Usuario u : usuarios) {
-                 if (!u.email.equals(email)) {
+                if (!u.email.equals(email)) {
                     System.out.println("Esse email não foi cadastrado!");
                     return false;
                 }
@@ -1209,12 +1209,16 @@ public class App {
                     System.out.println("Login Concluído!");
                     login = true;
                 } else if (u.email.equals(email) && !u.senha.equals(senha)) {
-                    System.out.println("Senha Errada! Tente novamente: ");
+                    tentativas++;
+                    if (tentativas == 4) {
+                        System.out.println("Você atingiu a quantidade máxima de tentativas!Volte para a aba de login.");
+                        return false;
+                    } else {
+                        System.out.println("Senha Errada! Tente novamente: ");
+                    }
                 }
             }
-        }while(!login);
+        } while (!login);
         return login;
     }
 }
-
-
