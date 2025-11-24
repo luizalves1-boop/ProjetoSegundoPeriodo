@@ -4,7 +4,6 @@ import java.util.Comparator;
 import java.util.Scanner;
 
 public class App {
-    //Update
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         String raiz = "Aplicativo/";
