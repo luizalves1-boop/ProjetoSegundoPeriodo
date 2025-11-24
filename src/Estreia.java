@@ -1,4 +1,4 @@
-public class Estreia {
+public class Estreia{
     int dia;
     int mes;
     int ano;
