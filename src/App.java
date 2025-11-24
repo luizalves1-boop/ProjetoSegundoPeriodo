@@ -1079,7 +1079,6 @@ public class App {
                     cadastrarUsuario(usuarios, raizUsuarios, arqIdUsuario);
                     break;
                 case 2://logar
-
                     break;
                 case 3://listar
                     break;
