@@ -146,7 +146,8 @@ public class App {
         System.out.println("Opção: ");
     }
 
-    public static void menuFilmesSeries() {
+    public static void menuFilmesSeries(String menu) {
+        System.out.println("\n" + menu);
         System.out.println("\n-----------------------" +
                 "\n1) Adicionar" +
                 "\n2) Para Assistir" +
@@ -1107,7 +1108,6 @@ public class App {
                 case 3://listar
                     break;
                 case 4://atualizar
-
                     break;
                 case 5://voltar
                     System.out.println("Voltando");
@@ -1172,7 +1172,7 @@ public class App {
             PrintWriter pw = new PrintWriter(raizUsuarios + u.id);
             pw.append("ID: " + u.id + "\n");
             pw.append("Nome: " + u.nome + "\n");
-            pw.append("Telefone" + u.telefone + "\n");
+            pw.append("Telefone: " + u.telefone + "\n");
             pw.append("Email: " + u.email + "\n");
             pw.append("Senha: " + u.senha + "\n");
             pw.flush();
@@ -1202,44 +1202,75 @@ public class App {
     }
 
     public static void logarUsuario(ArrayList<Usuario> usuarios) {
-        boolean login = loginUsuario(usuarios);
-        if (login) {
+        Scanner sc = new Scanner(System.in);
+        Usuario u = loginUsuario(usuarios);
+        if (u.login) {
+            menuDeLogin();
+            int opcao = sc.nextInt();
+            switch (opcao) {
+                case 1:
+                    infoUsuario(u);
+                    break;
+                case 2:
+                    menuFilmesSeries("Filmes");
+                    break;
+                case 3:
+                    menuFilmesSeries("Séries");
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    break;
+            }
 
         } else {
             return;
         }
     }
 
-    public static boolean loginUsuario(ArrayList<Usuario> usuarios) {
+    public static Usuario loginUsuario(ArrayList<Usuario> usuarios) {
         Scanner sc = new Scanner(System.in);
-        boolean login = false;
         int tentativas = 0;
         System.out.println("Email: ");
         String email = sc.nextLine();
-        do {
-            for (Usuario u : usuarios) {
-                if (!u.email.equals(email)) {
-                    System.out.println("Esse email não foi cadastrado!");
-                    return false;
-                }
+        for (Usuario u : usuarios) {
+            if (!u.email.equals(email)) {
+                System.out.println("Esse email não foi cadastrado!");
+                u.login = false;
+                return u;
             }
-            System.out.println("Senha: ");
-            String senha = sc.nextLine();
-            for (Usuario u : usuarios) {
-                if (u.email.equals(email) && u.senha.equals(senha)) {
-                    System.out.println("Login Concluído!");
-                    login = true;
-                } else if (u.email.equals(email) && !u.senha.equals(senha)) {
-                    tentativas++;
-                    if (tentativas == 4) {
-                        System.out.println("Você atingiu a quantidade máxima de tentativas!Volte para a aba de login.");
-                        return false;
-                    } else {
+        }
+        System.out.println("Senha: ");
+        String senha = sc.nextLine();
+        for (Usuario u : usuarios) {
+            if (u.email.equals(email) && u.senha.equals(senha)) {
+                System.out.println("Login Concluído!");
+                u.login = true;
+                return u;
+            } else if (u.email.equals(email) && !u.senha.equals(senha)) {
+                int i = 1;
+                while (i <= 4 && !u.senha.equals(senha)) {
+                    if (i < 4) {
                         System.out.println("Senha Errada! Tente novamente: ");
+                        senha = sc.nextLine();
+                    } if(i == 4) {
+                        System.out.println("Você atingiu a quantidade máxima de tentativas! Volte para a aba de login.");
+                        u.login = false;
+                        return u;
                     }
+                    i++;
                 }
             }
-        } while (!login);
-        return login;
+        }
+        return null;
+    }
+    public static void infoUsuario(Usuario u) {
+        System.out.println("\nPerfil");
+        System.out.println("-----------------------"
+                + "\nNome: " + u.nome
+                + "\nEmail: " + u.email
+                + "\nTelefone: " + u.telefone
+                + "\nSenha: " + u.senha
+                + "\n-----------------------");
     }
 }
