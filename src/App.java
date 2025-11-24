@@ -136,7 +136,7 @@ public class App {
         System.out.println("Opção: ");
     }
 
-    public static void menuDoUsuario() {
+    public static void menuDeLogin() {
         System.out.println("\n-----------------------" +
                 "\n1) Meu Perfil" +
                 "\n2) Meus Filmes" +
