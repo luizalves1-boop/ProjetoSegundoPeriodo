@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.Scanner;
 
 public class App {
+    //Update
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         String raiz = "Aplicativo/";
@@ -46,7 +47,7 @@ public class App {
         } while (opcao != 5);
     }
 
-    public static void iniciarResetar(String raiz, String raizFilmes, String raizSeries, String raizUsuarios,
+    private static void iniciarResetar(String raiz, String raizFilmes, String raizSeries, String raizUsuarios,
                                        String arqIdFilme, String arqIdSerie, String arqIdUsuario, ArrayList<Filme> filmes,
                                        ArrayList<Serie> series, ArrayList<Usuario> usuarios) {
         File dir = new File(raiz);
@@ -79,7 +80,7 @@ public class App {
         usuarios.clear();
     }
 
-    public static void menuPrincipal() {
+    private static void menuPrincipal() {
         System.out.println("\n-----------------------"
                 + "\n1) Iniciar/Resetar"
                 + "\n2) Filmes"
@@ -91,7 +92,7 @@ public class App {
 
     }
 
-    public static void menuSecundario(String menu) {
+    private static void menuSecundario(String menu) {
         System.out.println("\n" + menu);
         System.out.println("-----------------------"
                 + "\n1) Adicionar"
@@ -104,7 +105,7 @@ public class App {
         System.out.println("Opção: ");
     }
 
-    public static void menuUsuario() {
+    private static void menuUsuario() {
         System.out.println("\nUsuário");
         System.out.println("-----------------------"
                 + "\n1) Cadastrar"
@@ -116,7 +117,7 @@ public class App {
         System.out.println("Opção: ");
     }
 
-    public static void menuDeBusca() {
+    private static void menuDeBusca() {
         System.out.println("\n-----------------------" +
                 "\n1) Id" +
                 "\n2) Nome" +
@@ -126,7 +127,7 @@ public class App {
         System.out.println("Opção: ");
     }
 
-    public static void menuDeListagem() {
+    private static void menuDeListagem() {
         System.out.println("\n-----------------------" +
                 "\n1) ID" +
                 "\n2) Ordem Alfabética" +
@@ -136,7 +137,7 @@ public class App {
         System.out.println("Opção: ");
     }
 
-    public static int leId(String arquivo) {
+    private static int leId(String arquivo) {
         BufferedReader br;
         try {
             br = new BufferedReader(new FileReader(arquivo));
@@ -150,7 +151,7 @@ public class App {
         return -1;
     }
 
-    public static void gravaId(int i, String arquivo) {
+    private static void gravaId(int i, String arquivo) {
         try {
             PrintWriter pw = new PrintWriter(arquivo);
             pw.println(i);
@@ -161,7 +162,7 @@ public class App {
         }
     }
 
-    public static void apagaArquivos(File dir) {
+    private static void apagaArquivos(File dir) {
         File[] arquivos = dir.listFiles();
         if (arquivos != null) {
             for (File f : arquivos) {
@@ -172,7 +173,7 @@ public class App {
 
     //Filmes
 
-    public static void carregarFilmesNoArray(ArrayList<Filme> filmes, String raizFilmes) {
+    private static void carregarFilmesNoArray(ArrayList<Filme> filmes, String raizFilmes) {
         File dir = new File(raizFilmes);
         if (!dir.exists() || !dir.isDirectory()) {
             return;
@@ -231,7 +232,7 @@ public class App {
         }
     }
 
-    public static void gerenciarFilmes(ArrayList<Filme> filmes, String raizFilmes, String arqIdFilme) {
+    private static void gerenciarFilmes(ArrayList<Filme> filmes, String raizFilmes, String arqIdFilme) {
         Scanner sc = new Scanner(System.in);
         int opcao;
         do {
@@ -263,7 +264,7 @@ public class App {
         } while (opcao != 6);
     }
 
-    public static Filme adicionarEditarFilme(int id) {
+    private static Filme adicionarEditarFilme(int id) {
         Scanner sc = new Scanner(System.in);
         Filme f = new Filme();
         f.id = id;
@@ -296,7 +297,7 @@ public class App {
         return f;
     }
 
-    public static boolean gravarFilme(Filme f, String raizFilmes) {
+    private static boolean gravarFilme(Filme f, String raizFilmes) {
         try {
             PrintWriter pw = new PrintWriter(raizFilmes + f.id);
             pw.append("ID: " + f.id + "\n");
@@ -332,7 +333,7 @@ public class App {
         return true;
     }
 
-    public static void cadastrarFilme(String tipo, ArrayList<Filme> filmes, String raizFilmes, String arqIdFilme) {
+    private static void cadastrarFilme(String tipo, ArrayList<Filme> filmes, String raizFilmes, String arqIdFilme) {
         int id = leId(arqIdFilme);
         Filme f = adicionarEditarFilme(id);
         int id2 = f.id;
@@ -374,7 +375,7 @@ public class App {
         }
     }
 
-    public static void escreverFilme(Filme f) {
+    private static void escreverFilme(Filme f) {
         System.out.println("ID: " + f.id);
         System.out.println("Nome: " + f.nome);
         System.out.print("Estreia: ");
@@ -402,7 +403,7 @@ public class App {
         System.out.println();
     }
 
-    public static void buscarFilme(ArrayList<Filme> filmes) {
+    private static void buscarFilme(ArrayList<Filme> filmes) {
         Scanner sc = new Scanner(System.in);
         System.out.println("\nInforme qual tipo de buscar você quer utilizar: ");
         menuDeBusca();
@@ -426,7 +427,7 @@ public class App {
         }
     }
 
-    public static void buscaPorIdFilme(ArrayList<Filme> filmes) {
+    private static void buscaPorIdFilme(ArrayList<Filme> filmes) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Informe o ID do filme que deseja buscar: ");
         int id = sc.nextInt();
@@ -443,7 +444,7 @@ public class App {
         }
     }
 
-    public static void buscaPorNomeFilme(ArrayList<Filme> filmes) {
+    private static void buscaPorNomeFilme(ArrayList<Filme> filmes) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Informe o nome do filme que deseja buscar: ");
         String nome = sc.nextLine();
@@ -461,7 +462,7 @@ public class App {
 
     }
 
-    public static void buscaPorDataFilme(ArrayList<Filme> filmes) {
+    private static void buscaPorDataFilme(ArrayList<Filme> filmes) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Informe a data do filme que deseja buscar: (DDMMAAAA)");
         String data = sc.nextLine();
@@ -492,7 +493,7 @@ public class App {
         }
     }
 
-    public static void buscarPorGeneroFilme(ArrayList<Filme> filmes) {
+    private static void buscarPorGeneroFilme(ArrayList<Filme> filmes) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Informe o Gênero do filme que deseja buscar: ");
         String genero = sc.nextLine();
@@ -511,7 +512,7 @@ public class App {
         }
     }
 
-    public static void listarFilme(ArrayList<Filme> filmes) {
+    private static void listarFilme(ArrayList<Filme> filmes) {
         Scanner sc = new Scanner(System.in);
         menuDeListagem();
         int opcao = sc.nextInt();
@@ -534,7 +535,7 @@ public class App {
         }
     }
 
-    public static void listarIdFilme(ArrayList<Filme> filmes) {
+    private static void listarIdFilme(ArrayList<Filme> filmes) {
         System.out.println("\n--- Filmes ---");
         filmes.sort(Comparator.comparingInt(f -> f.id));
         for (Filme f : filmes) {
@@ -543,7 +544,7 @@ public class App {
         }
     }
 
-    public static void listarAlfabeticaFilme(ArrayList<Filme> filmes) {
+    private static void listarAlfabeticaFilme(ArrayList<Filme> filmes) {
         System.out.println("\n--- Filmes ---");
         filmes.sort(Comparator.comparing(f -> f.nome));
         for (Filme f : filmes) {
@@ -552,7 +553,7 @@ public class App {
         }
     }
 
-    public static void listarDataFilme(ArrayList<Filme> filmes) {
+    private static void listarDataFilme(ArrayList<Filme> filmes) {
         System.out.println("\n--- Filmes ---");
         filmes.sort(Comparator.comparingInt((Filme f) -> f.data.ano)
                 .thenComparingInt(f -> f.data.mes)
@@ -563,7 +564,7 @@ public class App {
         }
     }
 
-    public static void listarDuracaoFilme(ArrayList<Filme> filmes) {
+    private static void listarDuracaoFilme(ArrayList<Filme> filmes) {
         System.out.println("\n--- Filmes ---");
         filmes.sort(Comparator.comparingInt(f -> f.tempo.horas * 60 + f.tempo.minutos));
         for (Filme f : filmes) {
@@ -572,7 +573,7 @@ public class App {
         }
     }
 
-    public static void atualizarFilme(ArrayList<Filme> filmes, String raizFilmes) {
+    private static void atualizarFilme(ArrayList<Filme> filmes, String raizFilmes) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Informe o ID do filme que você quer atualizar: ");
         int id = sc.nextInt();
