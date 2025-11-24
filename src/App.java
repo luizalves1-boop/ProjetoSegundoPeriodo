@@ -46,7 +46,7 @@ public class App {
         } while (opcao != 5);
     }
 
-    private static void iniciarResetar(String raiz, String raizFilmes, String raizSeries, String raizUsuarios,
+    public static void iniciarResetar(String raiz, String raizFilmes, String raizSeries, String raizUsuarios,
                                        String arqIdFilme, String arqIdSerie, String arqIdUsuario, ArrayList<Filme> filmes,
                                        ArrayList<Serie> series, ArrayList<Usuario> usuarios) {
         File dir = new File(raiz);
@@ -79,7 +79,7 @@ public class App {
         usuarios.clear();
     }
 
-    private static void menuPrincipal() {
+    public static void menuPrincipal() {
         System.out.println("\n-----------------------"
                 + "\n1) Iniciar/Resetar"
                 + "\n2) Filmes"
@@ -91,7 +91,7 @@ public class App {
 
     }
 
-    private static void menuSecundario(String menu) {
+    public static void menuSecundario(String menu) {
         System.out.println("\n" + menu);
         System.out.println("-----------------------"
                 + "\n1) Adicionar"
@@ -104,7 +104,7 @@ public class App {
         System.out.println("Opção: ");
     }
 
-    private static void menuUsuario() {
+    public static void menuUsuario() {
         System.out.println("\nUsuário");
         System.out.println("-----------------------"
                 + "\n1) Cadastrar"
@@ -116,7 +116,7 @@ public class App {
         System.out.println("Opção: ");
     }
 
-    private static void menuDeBusca() {
+    public static void menuDeBusca() {
         System.out.println("\n-----------------------" +
                 "\n1) Id" +
                 "\n2) Nome" +
@@ -126,7 +126,7 @@ public class App {
         System.out.println("Opção: ");
     }
 
-    private static void menuDeListagem() {
+    public static void menuDeListagem() {
         System.out.println("\n-----------------------" +
                 "\n1) ID" +
                 "\n2) Ordem Alfabética" +
@@ -136,7 +136,7 @@ public class App {
         System.out.println("Opção: ");
     }
 
-    private static int leId(String arquivo) {
+    public static int leId(String arquivo) {
         BufferedReader br;
         try {
             br = new BufferedReader(new FileReader(arquivo));
@@ -150,7 +150,7 @@ public class App {
         return -1;
     }
 
-    private static void gravaId(int i, String arquivo) {
+    public static void gravaId(int i, String arquivo) {
         try {
             PrintWriter pw = new PrintWriter(arquivo);
             pw.println(i);
@@ -161,7 +161,7 @@ public class App {
         }
     }
 
-    private static void apagaArquivos(File dir) {
+    public static void apagaArquivos(File dir) {
         File[] arquivos = dir.listFiles();
         if (arquivos != null) {
             for (File f : arquivos) {
@@ -172,7 +172,7 @@ public class App {
 
     //Filmes
 
-    private static void carregarFilmesNoArray(ArrayList<Filme> filmes, String raizFilmes) {
+    public static void carregarFilmesNoArray(ArrayList<Filme> filmes, String raizFilmes) {
         File dir = new File(raizFilmes);
         if (!dir.exists() || !dir.isDirectory()) {
             return;
@@ -231,7 +231,7 @@ public class App {
         }
     }
 
-    private static void gerenciarFilmes(ArrayList<Filme> filmes, String raizFilmes, String arqIdFilme) {
+    public static void gerenciarFilmes(ArrayList<Filme> filmes, String raizFilmes, String arqIdFilme) {
         Scanner sc = new Scanner(System.in);
         int opcao;
         do {
@@ -263,7 +263,7 @@ public class App {
         } while (opcao != 6);
     }
 
-    private static Filme adicionarEditarFilme(int id) {
+    public static Filme adicionarEditarFilme(int id) {
         Scanner sc = new Scanner(System.in);
         Filme f = new Filme();
         f.id = id;
@@ -296,7 +296,7 @@ public class App {
         return f;
     }
 
-    private static boolean gravarFilme(Filme f, String raizFilmes) {
+    public static boolean gravarFilme(Filme f, String raizFilmes) {
         try {
             PrintWriter pw = new PrintWriter(raizFilmes + f.id);
             pw.append("ID: " + f.id + "\n");
@@ -332,7 +332,7 @@ public class App {
         return true;
     }
 
-    private static void cadastrarFilme(String tipo, ArrayList<Filme> filmes, String raizFilmes, String arqIdFilme) {
+    public static void cadastrarFilme(String tipo, ArrayList<Filme> filmes, String raizFilmes, String arqIdFilme) {
         int id = leId(arqIdFilme);
         Filme f = adicionarEditarFilme(id);
         int id2 = f.id;
@@ -374,7 +374,7 @@ public class App {
         }
     }
 
-    private static void escreverFilme(Filme f) {
+    public static void escreverFilme(Filme f) {
         System.out.println("ID: " + f.id);
         System.out.println("Nome: " + f.nome);
         System.out.print("Estreia: ");
@@ -402,7 +402,7 @@ public class App {
         System.out.println();
     }
 
-    private static void buscarFilme(ArrayList<Filme> filmes) {
+    public static void buscarFilme(ArrayList<Filme> filmes) {
         Scanner sc = new Scanner(System.in);
         System.out.println("\nInforme qual tipo de buscar você quer utilizar: ");
         menuDeBusca();
@@ -426,7 +426,7 @@ public class App {
         }
     }
 
-    private static void buscaPorIdFilme(ArrayList<Filme> filmes) {
+    public static void buscaPorIdFilme(ArrayList<Filme> filmes) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Informe o ID do filme que deseja buscar: ");
         int id = sc.nextInt();
@@ -443,7 +443,7 @@ public class App {
         }
     }
 
-    private static void buscaPorNomeFilme(ArrayList<Filme> filmes) {
+    public static void buscaPorNomeFilme(ArrayList<Filme> filmes) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Informe o nome do filme que deseja buscar: ");
         String nome = sc.nextLine();
@@ -461,7 +461,7 @@ public class App {
 
     }
 
-    private static void buscaPorDataFilme(ArrayList<Filme> filmes) {
+    public static void buscaPorDataFilme(ArrayList<Filme> filmes) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Informe a data do filme que deseja buscar: (DDMMAAAA)");
         String data = sc.nextLine();
@@ -492,7 +492,7 @@ public class App {
         }
     }
 
-    private static void buscarPorGeneroFilme(ArrayList<Filme> filmes) {
+    public static void buscarPorGeneroFilme(ArrayList<Filme> filmes) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Informe o Gênero do filme que deseja buscar: ");
         String genero = sc.nextLine();
@@ -511,7 +511,7 @@ public class App {
         }
     }
 
-    private static void listarFilme(ArrayList<Filme> filmes) {
+    public static void listarFilme(ArrayList<Filme> filmes) {
         Scanner sc = new Scanner(System.in);
         menuDeListagem();
         int opcao = sc.nextInt();
@@ -534,7 +534,7 @@ public class App {
         }
     }
 
-    private static void listarIdFilme(ArrayList<Filme> filmes) {
+    public static void listarIdFilme(ArrayList<Filme> filmes) {
         System.out.println("\n--- Filmes ---");
         filmes.sort(Comparator.comparingInt(f -> f.id));
         for (Filme f : filmes) {
@@ -543,7 +543,7 @@ public class App {
         }
     }
 
-    private static void listarAlfabeticaFilme(ArrayList<Filme> filmes) {
+    public static void listarAlfabeticaFilme(ArrayList<Filme> filmes) {
         System.out.println("\n--- Filmes ---");
         filmes.sort(Comparator.comparing(f -> f.nome));
         for (Filme f : filmes) {
@@ -552,7 +552,7 @@ public class App {
         }
     }
 
-    private static void listarDataFilme(ArrayList<Filme> filmes) {
+    public static void listarDataFilme(ArrayList<Filme> filmes) {
         System.out.println("\n--- Filmes ---");
         filmes.sort(Comparator.comparingInt((Filme f) -> f.data.ano)
                 .thenComparingInt(f -> f.data.mes)
@@ -563,7 +563,7 @@ public class App {
         }
     }
 
-    private static void listarDuracaoFilme(ArrayList<Filme> filmes) {
+    public static void listarDuracaoFilme(ArrayList<Filme> filmes) {
         System.out.println("\n--- Filmes ---");
         filmes.sort(Comparator.comparingInt(f -> f.tempo.horas * 60 + f.tempo.minutos));
         for (Filme f : filmes) {
@@ -572,7 +572,7 @@ public class App {
         }
     }
 
-    private static void atualizarFilme(ArrayList<Filme> filmes, String raizFilmes) {
+    public static void atualizarFilme(ArrayList<Filme> filmes, String raizFilmes) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Informe o ID do filme que você quer atualizar: ");
         int id = sc.nextInt();
@@ -584,7 +584,7 @@ public class App {
         }
     }
 
-    private static void excluirFilme(ArrayList<Filme> filmes, String raizFilmes) {
+    public static void excluirFilme(ArrayList<Filme> filmes, String raizFilmes) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Informe o ID do filme que você quer excluir: ");
         int id = sc.nextInt();
@@ -604,7 +604,7 @@ public class App {
 
     //Séries
 
-    private static void carregarSeriesNoArray(ArrayList<Serie> series, String raizSeries) {
+    public static void carregarSeriesNoArray(ArrayList<Serie> series, String raizSeries) {
         File dir = new File(raizSeries);
         if (!dir.exists() || !dir.isDirectory()) {
             return;
@@ -660,7 +660,7 @@ public class App {
         }
     }
 
-    private static void gerenciarSeries(ArrayList<Serie> series, String raizSeries, String arqIdSerie) {
+    public static void gerenciarSeries(ArrayList<Serie> series, String raizSeries, String arqIdSerie) {
         Scanner sc = new Scanner(System.in);
         int opcao;
         do {
@@ -689,7 +689,7 @@ public class App {
         } while (opcao != 6);
     }
 
-    private static Serie adicionarEditarSerie(int id) {
+    public static Serie adicionarEditarSerie(int id) {
         Scanner sc = new Scanner(System.in);
         Serie s = new Serie();
         s.id = id;
@@ -721,7 +721,7 @@ public class App {
         return s;
     }
 
-    private static boolean gravarSerie(Serie s, String raizSeries) {
+    public static boolean gravarSerie(Serie s, String raizSeries) {
         try {
             PrintWriter pw = new PrintWriter(raizSeries + s.id);
             pw.append("ID: " + s.id + "\n");
@@ -758,7 +758,7 @@ public class App {
         return true;
     }
 
-    private static void cadastrarSerie(String tipo, ArrayList<Serie> series, String raizSeries, String arqIdSerie) {
+    public static void cadastrarSerie(String tipo, ArrayList<Serie> series, String raizSeries, String arqIdSerie) {
         int id = leId(arqIdSerie);
         Serie s = adicionarEditarSerie(id);
         int id2 = s.id;
@@ -800,7 +800,7 @@ public class App {
         }
     }
 
-    private static void escreverSerie(Serie s) {
+    public static void escreverSerie(Serie s) {
         System.out.println("ID: " + s.id);
         System.out.println("Nome: " + s.nome);
         System.out.print("Estreia: ");
@@ -829,7 +829,7 @@ public class App {
         System.out.println();
     }
 
-    private static void buscarSerie(ArrayList<Serie> series) {
+    public static void buscarSerie(ArrayList<Serie> series) {
         Scanner sc = new Scanner(System.in);
         System.out.println("\nInforme qual tipo de buscar você quer utilizar: ");
         menuDeBusca();
@@ -853,7 +853,7 @@ public class App {
         }
     }
 
-    private static void buscaPorIdSerie(ArrayList<Serie> series) {
+    public static void buscaPorIdSerie(ArrayList<Serie> series) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Informe o ID da série que deseja buscar: ");
         int id = sc.nextInt();
@@ -870,7 +870,7 @@ public class App {
         }
     }
 
-    private static void buscaPorNomeSerie(ArrayList<Serie> series) {
+    public static void buscaPorNomeSerie(ArrayList<Serie> series) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Informe o nome da série que deseja buscar: ");
         String nome = sc.nextLine();
@@ -888,7 +888,7 @@ public class App {
 
     }
 
-    private static void buscaPorDataSerie(ArrayList<Serie> series) {
+    public static void buscaPorDataSerie(ArrayList<Serie> series) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Informe a data da série que deseja buscar: (DDMMAAAA)");
         String data = sc.nextLine();
@@ -919,7 +919,7 @@ public class App {
         }
     }
 
-    private static void buscarPorGeneroSerie(ArrayList<Serie> series) {
+    public static void buscarPorGeneroSerie(ArrayList<Serie> series) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Informe o Gênero da série que deseja buscar: ");
         String genero = sc.nextLine();
@@ -938,7 +938,7 @@ public class App {
         }
     }
 
-    private static void listarSerie(ArrayList<Serie> series) {
+    public static void listarSerie(ArrayList<Serie> series) {
         Scanner sc = new Scanner(System.in);
         menuDeListagem();
         int opcao = sc.nextInt();
@@ -961,7 +961,7 @@ public class App {
         }
     }
 
-    private static void listarIdSerie(ArrayList<Serie> series) {
+    public static void listarIdSerie(ArrayList<Serie> series) {
         System.out.println("\n--- Séries ---");
         series.sort(Comparator.comparingInt(s -> s.id));
         for (Serie s : series) {
@@ -970,7 +970,7 @@ public class App {
         }
     }
 
-    private static void listarAlfabeticaSerie(ArrayList<Serie> series) {
+    public static void listarAlfabeticaSerie(ArrayList<Serie> series) {
         System.out.println("\n--- Séries ---");
         series.sort(Comparator.comparing(s -> s.nome));
         for (Serie s : series) {
@@ -979,7 +979,7 @@ public class App {
         }
     }
 
-    private static void listarDataSerie(ArrayList<Serie> series) {
+    public static void listarDataSerie(ArrayList<Serie> series) {
         System.out.println("\n--- Séries ---");
         series.sort(Comparator.comparingInt((Serie s) -> s.data.ano)
                 .thenComparingInt(s -> s.data.mes)
@@ -990,7 +990,7 @@ public class App {
         }
     }
 
-    private static void listarTemporadasSerie(ArrayList<Serie> series) {
+    public static void listarTemporadasSerie(ArrayList<Serie> series) {
         System.out.println("\n--- Séries ---");
         series.sort(Comparator.comparingInt(s -> s.temporadas));
         for (Serie s : series) {
@@ -999,7 +999,7 @@ public class App {
         }
     }
 
-    private static void atualizarSerie(ArrayList<Serie> series, String raizSeries) {
+    public static void atualizarSerie(ArrayList<Serie> series, String raizSeries) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Informe o ID da série que você quer atualizar: ");
         int id = sc.nextInt();
@@ -1011,7 +1011,7 @@ public class App {
         }
     }
 
-    private static void excluirSerie(ArrayList<Serie> series, String raizSeries) {
+    public static void excluirSerie(ArrayList<Serie> series, String raizSeries) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Informe o ID da série que você quer excluir: ");
         int id = sc.nextInt();
@@ -1031,7 +1031,7 @@ public class App {
 
     //Usuários
 
-    private static void carregarUsuariosNoArray(ArrayList<Usuario> usuarios, String raizUsuarios) {
+    public static void carregarUsuariosNoArray(ArrayList<Usuario> usuarios, String raizUsuarios) {
         File dir = new File(raizUsuarios);
         if (!dir.exists() || !dir.isDirectory()) {
             return;
@@ -1068,7 +1068,7 @@ public class App {
         }
     }
 
-    private static void gerenciarUsuarios(ArrayList<Usuario> usuarios, String raizUsuarios, String arqIdUsuario) {
+    public static void gerenciarUsuarios(ArrayList<Usuario> usuarios, String raizUsuarios, String arqIdUsuario) {
         Scanner sc = new Scanner(System.in);
         int opcao;
         do {
@@ -1096,7 +1096,7 @@ public class App {
         } while (opcao != 5);
     }
 
-    private static Usuario criarUsuario(ArrayList<Usuario> usuarios, int id) {
+    public static Usuario criarUsuario(ArrayList<Usuario> usuarios, int id) {
         Scanner sc = new Scanner(System.in);
         Usuario u = new Usuario();
         u.id = id;
@@ -1112,8 +1112,7 @@ public class App {
         return u;
     }
 
-    private static String verificarEmail(ArrayList<Usuario> usuarios) {
-
+    public static String verificarEmail(ArrayList<Usuario> usuarios) {
         Scanner sc = new Scanner(System.in);
         String email = "";
         int arroba = 0;
@@ -1145,7 +1144,7 @@ public class App {
         return email;
     }
 
-    private static boolean gravarUsuario(Usuario u, String raizUsuarios) {
+    public static boolean gravarUsuario(Usuario u, String raizUsuarios) {
         try {
             PrintWriter pw = new PrintWriter(raizUsuarios + u.id);
             pw.append("ID: " + u.id + "\n");
@@ -1162,7 +1161,7 @@ public class App {
         return true;
     }
 
-    private static void cadastrarUsuario(ArrayList<Usuario> usuarios, String raizUsuarios, String arqIdUsuario) {
+    public static void cadastrarUsuario(ArrayList<Usuario> usuarios, String raizUsuarios, String arqIdUsuario) {
         int id = leId(arqIdUsuario);
         Usuario u = criarUsuario(usuarios, id);
         int id2 = u.id;
@@ -1175,11 +1174,11 @@ public class App {
         System.out.println();
     }
 
-    private static void leUsuario(ArrayList<Usuario> usuarios, Usuario u) {
+    public static void leUsuario(ArrayList<Usuario> usuarios, Usuario u) {
         usuarios.add(u);
     }
 
-    private static void logarUsuario(ArrayList<Usuario> usuarios) {
+    public static void logarUsuario(ArrayList<Usuario> usuarios) {
         boolean login = loginUsuario(usuarios);
         if (login) {
 
