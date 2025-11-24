@@ -1079,7 +1079,7 @@ public class App {
                     cadastrarUsuario(usuarios, raizUsuarios, arqIdUsuario);
                     break;
                 case 2://logar
-                    logarUsuario(usuarios);
+
                     break;
                 case 3://listar
                     break;
@@ -1178,14 +1178,6 @@ public class App {
         usuarios.add(u);
     }
 
-    public static void logarUsuario(ArrayList<Usuario> usuarios) {
-        boolean login = loginUsuario(usuarios);
-        if (login) {
-
-        } else {
-            return;
-        }
-    }
 
     public static boolean loginUsuario(ArrayList<Usuario> usuarios) {
         Scanner sc = new Scanner(System.in);
