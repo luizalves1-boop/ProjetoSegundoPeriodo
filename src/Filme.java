@@ -5,4 +5,5 @@ public class Filme {
     Estreia data;
     Tempo tempo;
     String[] genero;
+    String categoria;
 }

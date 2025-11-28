@@ -5,4 +5,5 @@ public class Serie {
     int temporadas;
     int episodios;
     String[] genero;
+    String categoria;
 }
