@@ -109,9 +109,7 @@ public class App {
         System.out.println("-----------------------"
                 + "\n1) Cadastrar"
                 + "\n2) Logar"
-                + "\n3) Listar"
-                + "\n4) Excluir"
-                + "\n5) Voltar"
+                + "\n3) Voltar"
                 + "\n-----------------------");
         System.out.println("Opção: ");
     }
@@ -1080,11 +1078,6 @@ public class App {
                     break;
                 case 2://logar
                     logarUsuario(usuarios);
-                    break;
-                case 3://listar
-                    break;
-                case 4://atualizar
-
                     break;
                 case 5://voltar
                     System.out.println("Voltando");
