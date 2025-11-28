@@ -4,4 +4,5 @@ public class Usuario {
     long telefone;
     String email;
     String senha;
+    boolean login;
 }
