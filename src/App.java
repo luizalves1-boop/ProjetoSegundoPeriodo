@@ -1529,6 +1529,7 @@ public class App {
                 if (u.filmes != null) {
                     for (Filme f : u.filmes) {
                         if (f.estado.equals("Assistindo")) {
+                            System.out.println();
                             escreverFilme(f);
                             System.out.println("Estado: " + f.estado);
                         }
@@ -1540,6 +1541,7 @@ public class App {
                 if (u.filmes != null) {
                     for (Filme f : u.filmes) {
                         if (f.estado.equals("Para Assistir")) {
+                            System.out.println();
                             escreverFilme(f);
                             System.out.println("Estado: " + f.estado);
                         }
@@ -1551,6 +1553,7 @@ public class App {
                 if (u.filmes != null) {
                     for (Filme f : u.filmes) {
                         if (f.estado.equals("Concluído")) {
+                            System.out.println();
                             escreverFilme(f);
                             System.out.println("Estado: " + f.estado);
                         }
@@ -1635,6 +1638,7 @@ public class App {
                 if (u.series != null) {
                     for (Serie s : u.series) {
                         if (s.estado.equals("Assistindo")) {
+                            System.out.println();
                             escreverSerie(s);
                             System.out.println("Estado: " + s.estado);
                         }
@@ -1646,6 +1650,7 @@ public class App {
                 if (u.series != null) {
                     for (Serie s : u.series) {
                         if (s.estado.equals("Para Assistir")) {
+                            System.out.println();
                             escreverSerie(s);
                             System.out.println("Estado: " + s.estado);
                         }
@@ -1657,6 +1662,7 @@ public class App {
                 if (u.series != null) {
                     for (Serie s : u.series) {
                         if (s.estado.equals("Concluída")) {
+                            System.out.println();
                             escreverSerie(s);
                             System.out.println("Estado: " + s.estado);
                         }
