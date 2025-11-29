@@ -433,7 +433,7 @@ public class App {
             System.out.print(f.data.mes + "/");
         }
         System.out.println(f.data.ano);
-        if (f.categoria != null){
+        if (f.categoria != null) {
             System.out.println("Duração: " + f.tempoAssistido.horas + "h " + f.tempoAssistido.minutos + "m/" + f.tempo.horas + "h " + f.tempo.minutos + "m");
         } else {
             System.out.println("Duração: " + f.tempo.horas + "h " + f.tempo.minutos + "m");
@@ -1437,33 +1437,37 @@ public class App {
         Scanner sc = new Scanner(System.in);
         Usuario u = loginUsuario(usuarios);
         int opcao = 0;
-        if (u.login) {
-            do {
-                menuDeLogin();
-                opcao = sc.nextInt();
-                switch (opcao) {
-                    case 1:
-                        infoUsuario(u);
-                        break;
-                    case 2:
-                        f(filmes, u, raizUsuariosFilmes);
-                        break;
-                    case 3:
-                        s(series, u, raizUsuariosSeries);
-                        break;
-                    case 4:
-                        break;
+        if (u != null) {
+            if (u.login) {
+                do {
+                    menuDeLogin();
+                    opcao = sc.nextInt();
+                    switch (opcao) {
+                        case 1:
+                            infoUsuario(u);
+                            break;
+                        case 2:
+                            f(filmes, u, raizUsuariosFilmes);
+                            break;
+                        case 3:
+                            s(series, u, raizUsuariosSeries);
+                            break;
+                        case 4:
+                            break;
 
-                }
-            } while (opcao != 4);
+                    }
+                } while (opcao != 4);
+            } else {
+                return;
+            }
         } else {
             return;
         }
+
     }
 
     public static Usuario loginUsuario(ArrayList<Usuario> usuarios) {
         Scanner sc = new Scanner(System.in);
-        int tentativas = 0;
         System.out.println("Email: ");
         String email = sc.nextLine();
         Usuario encontrado = null;
@@ -1588,10 +1592,16 @@ public class App {
         for (Filme f : filmes) {
             Filme copia = copiarFilme(f);
             if (f.id == id) {
-                System.out.println("Informe qual categoria quer adicionar esse filme: \n"
-                        + "1)Assistindo\n"
-                        + "2)Para Assistir\n"
-                        + "3)Concluído");
+                System.out.println("Informe qual categoria quer adicionar esse filme: \n");
+                System.out.println("\n-----------------------" +
+                        "\n1) Adicionar/Editar" +
+                        "\n2) Assistindo" +
+                        "\n3) Para Assistir" +
+                        "\n4) Concluídos/Concluídas" +
+                        "\n5) Informações Totais" +
+                        "\n6) Sair" +
+                        "\n-----------------------");
+                System.out.println("Opção: ");
                 int opcao = sc.nextInt();
                 if (opcao == 1) {
                     copia.categoria = "Assistindo";
@@ -1691,10 +1701,16 @@ public class App {
         for (Serie s : series) {
             Serie copia = copiarSerie(s);
             if (s.id == id) {
-                System.out.println("Informe qual categoria quer adicionar para essa série: \n"
-                        + "1)Assistindo\n"
-                        + "2)Para Assistir\n"
-                        + "3)Concluído");
+                System.out.println("Informe qual categoria quer adicionar para essa série: \n");
+                System.out.println("\n-----------------------" +
+                        "\n1) Adicionar/Editar" +
+                        "\n2) Assistindo" +
+                        "\n3) Para Assistir" +
+                        "\n4) Concluídos/Concluídas" +
+                        "\n5) Informações Totais" +
+                        "\n6) Sair" +
+                        "\n-----------------------");
+                System.out.println("Opção: ");
                 int opcao = sc.nextInt();
                 if (opcao == 1) {
                     copia.categoria = "Assistindo";
@@ -1730,7 +1746,14 @@ public class App {
         i.tempo = f.tempo;
         i.genero = f.genero;
         i.categoria = f.categoria;
-        i.tempoAssistido = f.tempoAssistido;
+        i.tempoAssistido = new Tempo();
+        if (f.tempoAssistido != null) {
+            i.tempoAssistido.horas = f.tempoAssistido.horas;
+            i.tempoAssistido.minutos = f.tempoAssistido.minutos;
+        } else {
+            i.tempoAssistido.horas = 0;
+            i.tempoAssistido.minutos = 0;
+        }
         return i;
 
     }
