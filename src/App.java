@@ -1594,12 +1594,9 @@ public class App {
             if (f.id == id) {
                 System.out.println("Informe qual categoria quer adicionar esse filme: \n");
                 System.out.println("\n-----------------------" +
-                        "\n1) Adicionar/Editar" +
-                        "\n2) Assistindo" +
-                        "\n3) Para Assistir" +
-                        "\n4) Concluídos/Concluídas" +
-                        "\n5) Informações Totais" +
-                        "\n6) Sair" +
+                        "\n1) Assistindo" +
+                        "\n2) Para Assistir" +
+                        "\n3) Concluído" +
                         "\n-----------------------");
                 System.out.println("Opção: ");
                 int opcao = sc.nextInt();
@@ -1703,12 +1700,9 @@ public class App {
             if (s.id == id) {
                 System.out.println("Informe qual categoria quer adicionar para essa série: \n");
                 System.out.println("\n-----------------------" +
-                        "\n1) Adicionar/Editar" +
-                        "\n2) Assistindo" +
-                        "\n3) Para Assistir" +
-                        "\n4) Concluídos/Concluídas" +
-                        "\n5) Informações Totais" +
-                        "\n6) Sair" +
+                        "\n1) Assistindo" +
+                        "\n2) Para Assistir" +
+                        "\n3) Concluída" +
                         "\n-----------------------");
                 System.out.println("Opção: ");
                 int opcao = sc.nextInt();
