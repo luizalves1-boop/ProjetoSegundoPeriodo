@@ -1283,6 +1283,8 @@ public class App {
         Scanner sc = new Scanner(System.in);
         Usuario u = new Usuario();
         u.id = id;
+        u.filmes = new ArrayList<>();
+        u.series = new ArrayList<>();
         System.out.println("Informe o nome de usuário: ");
         u.nome = sc.nextLine();
         System.out.println("Informe o telefone do usuário: ");
@@ -1423,16 +1425,12 @@ public class App {
         Usuario u = criarUsuario(usuarios, id);
         int id2 = u.id;
         if (gravarUsuario(u, raizUsuarios)) {
-            leUsuario(usuarios, u);
+            usuarios.add(u);
             gravaId(++id, arqIdUsuario);
         } else {
             System.out.println("Não foi possível gravar a usuário!");
         }
         System.out.println();
-    }
-
-    public static void leUsuario(ArrayList<Usuario> usuarios, Usuario u) {
-        usuarios.add(u);
     }
 
     public static void logarUsuario(ArrayList<Filme> filmes, ArrayList<Serie> series, ArrayList<Usuario> usuarios, String raizUsuariosFilmes, String raizUsuariosSeries) {
@@ -1468,12 +1466,16 @@ public class App {
         int tentativas = 0;
         System.out.println("Email: ");
         String email = sc.nextLine();
+        Usuario encontrado = null;
         for (Usuario u : usuarios) {
-            if (!u.email.equals(email)) {
-                System.out.println("Esse email não foi cadastrado!");
-                u.login = false;
-                return u;
+            if (u.email.equals(email)) {
+                encontrado = u;
+                break;
             }
+        }
+        if (encontrado == null) {
+            System.out.println("Esse email não foi cadastrado!");
+            return null;
         }
         System.out.println("Senha: ");
         String senha = sc.nextLine();
