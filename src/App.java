@@ -1574,7 +1574,8 @@ public class App {
 
     public static int adicionarFilme(ArrayList<Filme> filmes, Usuario u, String raizUsuariosFilmes) {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Informe o ID do filme que quer adicionar a sua lista: ");
+        listarIdFilme(filmes);
+        System.out.println("\nInforme o ID do filme que quer adicionar a sua lista: ");
         int id = sc.nextInt();
         for (Filme f : filmes) {
             if (f.id == id) {
@@ -1668,7 +1669,8 @@ public class App {
 
     public static int adicionarSerie(ArrayList<Serie> series, Usuario u, String raizUsuariosSeries) {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Informe o ID da série que quer adicionar a sua lista: ");
+        listarIdSerie(series);
+        System.out.println("\nInforme o ID da série que quer adicionar a sua lista: ");
         int id = sc.nextInt();
         for (Serie s : series) {
             if (s.id == id) {
