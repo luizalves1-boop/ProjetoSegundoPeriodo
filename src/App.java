@@ -1,5 +1,7 @@
 import java.io.*;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Scanner;
 
@@ -10,6 +12,8 @@ public class App {
         String raizFilmes = raiz + "Filmes/";
         String raizSeries = raiz + "Séries/";
         String raizUsuarios = raiz + "Usuários/";
+        String raizUsuariosFilmes = raiz + "Usuários Filmes/";
+        String raizUsuariosSeries = raiz + "Usuários Séries/";
         String arqIdFilme = raiz + "idFilme.txt";
         String arqIdSerie = raiz + "idSerie.txt";
         String arqIdUsuario = raiz + "idUsuario.txt";
@@ -18,14 +22,18 @@ public class App {
         ArrayList<Usuario> usuarios = new ArrayList<>();
         carregarFilmesNoArray(filmes, raizFilmes);
         carregarSeriesNoArray(series, raizSeries);
-        carregarUsuariosNoArray(usuarios, raizUsuarios);
+        carregarUsuariosNoArray(usuarios, raizUsuarios, raizUsuariosFilmes, raizUsuariosSeries);
+        for (Usuario u : usuarios) {
+            carregarFilmesUsuario(u, raizUsuariosFilmes);
+            carregarSeriesUsuario(u, raizUsuariosSeries);
+        }
         int opcao;
         do {
             menuPrincipal();
             opcao = sc.nextInt();
             switch (opcao) {
                 case 1:
-                    iniciarResetar(raiz, raizFilmes, raizSeries, raizUsuarios, arqIdFilme, arqIdSerie, arqIdUsuario, filmes, series, usuarios);
+                    iniciarResetar(raiz, raizFilmes, raizSeries, raizUsuarios, raizUsuariosFilmes, raizUsuariosSeries, arqIdFilme, arqIdSerie, arqIdUsuario, filmes, series, usuarios);
                     break;
                 case 2:
                     gerenciarFilmes(filmes, raizFilmes, arqIdFilme);
@@ -34,7 +42,7 @@ public class App {
                     gerenciarSeries(series, raizSeries, arqIdSerie);
                     break;
                 case 4:
-                    gerenciarUsuarios(usuarios, raizUsuarios, arqIdUsuario);
+                    gerenciarUsuarios(filmes, series, usuarios, raizUsuarios, raizUsuariosFilmes, raizUsuariosSeries, arqIdUsuario);
                     break;
                 case 5:
                     System.out.println("Saindo...");
@@ -46,7 +54,7 @@ public class App {
         } while (opcao != 5);
     }
 
-    public static void iniciarResetar(String raiz, String raizFilmes, String raizSeries, String raizUsuarios,
+    public static void iniciarResetar(String raiz, String raizFilmes, String raizSeries, String raizUsuarios, String raizUsuariosFilmes, String raizUsuariosSeries,
                                       String arqIdFilme, String arqIdSerie, String arqIdUsuario, ArrayList<Filme> filmes,
                                       ArrayList<Serie> series, ArrayList<Usuario> usuarios) {
         File dir = new File(raiz);
@@ -66,6 +74,18 @@ public class App {
             apagaArquivos(dir);
         }
         dir = new File(raizUsuarios);
+        if (!dir.exists()) {
+            dir.mkdir();
+        } else {
+            apagaArquivos(dir);
+        }
+        dir = new File(raizUsuariosFilmes);
+        if (!dir.exists()) {
+            dir.mkdir();
+        } else {
+            apagaArquivos(dir);
+        }
+        dir = new File(raizUsuariosSeries);
         if (!dir.exists()) {
             dir.mkdir();
         } else {
@@ -148,8 +168,8 @@ public class App {
         System.out.println("\n" + menu);
         System.out.println("\n-----------------------" +
                 "\n1) Adicionar" +
-                "\n2) Para Assistir" +
-                "\n3) Assistindo" +
+                "\n2) Assistindo" +
+                "\n3) Para Assistir" +
                 "\n4) Concluídos" +
                 "\n5) Informações Totais" +
                 "\n6) Sair" +
@@ -396,7 +416,7 @@ public class App {
         }
     }
 
-    public static void escreverFilme(Filme f) {
+    public static void escreverFilme(Filme f, int mins) {
         System.out.println("ID: " + f.id);
         System.out.println("Nome: " + f.nome);
         System.out.print("Estreia: ");
@@ -411,7 +431,17 @@ public class App {
             System.out.print(f.data.mes + "/");
         }
         System.out.println(f.data.ano);
-        System.out.println("Duração: " + f.tempo.horas + "h " + f.tempo.minutos + "m");
+        if (mins == -2) {
+            System.out.println("Duração: " + f.tempo.horas + "h " + f.tempo.minutos + "m");
+        } else if (mins == 0) {
+            System.out.println("Duração: " + 0 + "h " + 0 + "m/" + f.tempo.horas + "h " + f.tempo.minutos + "m");
+        } else if (mins == -1) {
+            System.out.println("Duração: " + f.tempo.horas + "h " + f.tempo.minutos + "m/" + f.tempo.horas + "h " + f.tempo.minutos + "m");
+        } else if (mins > 0) {
+            int hr = mins / 60;
+            int min = mins % 60;
+            System.out.println("Duração: " + hr + "h " + min + "m/" + f.tempo.horas + "h " + f.tempo.minutos + "m");
+        }
         System.out.print("Gêneros: ");
         for (int i = 0; i < f.genero.length; i++) {
             if (f.genero[i] != null && !f.genero[i].isEmpty()) {
@@ -456,7 +486,7 @@ public class App {
         for (Filme f : filmes) {
             if (f.id == id) {
                 System.out.println("\n--- Filme encontrado (" + f.id + ") ---");
-                escreverFilme(f);
+                escreverFilme(f, -2);
                 encontrado = true;
             }
         }
@@ -473,7 +503,7 @@ public class App {
         for (Filme f : filmes) {
             if (f.nome.equals(nome)) {
                 System.out.println("\n--- Filme encontrado (" + f.id + ") ---");
-                escreverFilme(f);
+                escreverFilme(f, -2);
                 encontrado = true;
             }
         }
@@ -505,7 +535,7 @@ public class App {
             String dataf = dia + mes + ano;
             if (dataf.equals(data)) {
                 System.out.println("\n--- Filme encontrado (" + f.id + ") ---");
-                escreverFilme(f);
+                escreverFilme(f, -2);
                 encontrado = true;
             }
         }
@@ -523,7 +553,7 @@ public class App {
             for (int i = 0; i < f.genero.length; i++) {
                 if (f.genero[i] != null && !f.genero[i].isEmpty() && f.genero[i].equals(genero)) {
                     System.out.println("\n--- Filme encontrado (" + f.id + ") ---");
-                    escreverFilme(f);
+                    escreverFilme(f, -2);
                     encontrado = true;
                 }
             }
@@ -561,7 +591,7 @@ public class App {
         filmes.sort(Comparator.comparingInt(f -> f.id));
         for (Filme f : filmes) {
             System.out.println("\n--- Filme(" + f.id + ") ---");
-            escreverFilme(f);
+            escreverFilme(f, -2);
         }
     }
 
@@ -570,7 +600,7 @@ public class App {
         filmes.sort(Comparator.comparing(f -> f.nome));
         for (Filme f : filmes) {
             System.out.println("\n--- Filme(" + f.id + ") ---");
-            escreverFilme(f);
+            escreverFilme(f, -2);
         }
     }
 
@@ -581,7 +611,7 @@ public class App {
                 .thenComparingInt(f -> f.data.dia));
         for (Filme f : filmes) {
             System.out.println("\n--- Filme(" + f.id + ") ---");
-            escreverFilme(f);
+            escreverFilme(f, -2);
         }
     }
 
@@ -590,7 +620,7 @@ public class App {
         filmes.sort(Comparator.comparingInt(f -> f.tempo.horas * 60 + f.tempo.minutos));
         for (Filme f : filmes) {
             System.out.println("\n--- Filme(" + f.id + ") ---");
-            escreverFilme(f);
+            escreverFilme(f, -2);
         }
     }
 
@@ -822,7 +852,7 @@ public class App {
         }
     }
 
-    public static void escreverSerie(Serie s) {
+    public static void escreverSerie(Serie s, int eps) {
         System.out.println("ID: " + s.id);
         System.out.println("Nome: " + s.nome);
         System.out.print("Estreia: ");
@@ -838,7 +868,16 @@ public class App {
         }
         System.out.println(s.data.ano);
         System.out.println("Temporadas: " + s.temporadas);
-        System.out.println("Episódios: " + s.episodios);
+        if (eps == -2) {
+            System.out.println("Episódios: " + s.episodios);
+        } else if (eps == 0) {
+            System.out.println("Episódios: " + "0/" + s.episodios);
+        } else if (eps == -1) {
+            System.out.println("Episódios: " + s.episodios + "/" + s.episodios);
+        } else if (eps > 0) {
+            System.out.println("Episódios: " + eps + "/" + s.episodios);
+        }
+
         System.out.print("Gêneros: ");
         for (int i = 0; i < s.genero.length; i++) {
             if (s.genero[i] != null && !s.genero[i].isEmpty()) {
@@ -883,7 +922,7 @@ public class App {
         for (Serie s : series) {
             if (s.id == id) {
                 System.out.println("\n--- Série encontrada (" + s.id + ") ---");
-                escreverSerie(s);
+                escreverSerie(s, -2);
                 encontrado = true;
             }
         }
@@ -900,7 +939,7 @@ public class App {
         for (Serie s : series) {
             if (s.nome.equals(nome)) {
                 System.out.println("\n--- Série encontrada (" + s.id + ") ---");
-                escreverSerie(s);
+                escreverSerie(s, -2);
                 encontrado = true;
             }
         }
@@ -932,7 +971,7 @@ public class App {
             String dataf = dia + mes + ano;
             if (dataf.equals(data)) {
                 System.out.println("\n--- Série encontrada (" + s.id + ") ---");
-                escreverSerie(s);
+                escreverSerie(s, -2);
                 encontrado = true;
             }
         }
@@ -950,7 +989,7 @@ public class App {
             for (int i = 0; i < s.genero.length; i++) {
                 if (s.genero[i] != null && !s.genero[i].isEmpty() && s.genero[i].equals(genero)) {
                     System.out.println("\n--- Série encontrada (" + s.id + ") ---");
-                    escreverSerie(s);
+                    escreverSerie(s, -2);
                     encontrado = true;
                 }
             }
@@ -988,7 +1027,7 @@ public class App {
         series.sort(Comparator.comparingInt(s -> s.id));
         for (Serie s : series) {
             System.out.println("\n--- Série(" + s.id + ") ---");
-            escreverSerie(s);
+            escreverSerie(s, -2);
         }
     }
 
@@ -997,7 +1036,7 @@ public class App {
         series.sort(Comparator.comparing(s -> s.nome));
         for (Serie s : series) {
             System.out.println("\n--- Série(" + s.id + ") ---");
-            escreverSerie(s);
+            escreverSerie(s, -2);
         }
     }
 
@@ -1008,7 +1047,7 @@ public class App {
                 .thenComparingInt(s -> s.data.dia));
         for (Serie s : series) {
             System.out.println("\n--- Série(" + s.id + ") ---");
-            escreverSerie(s);
+            escreverSerie(s, -2);
         }
     }
 
@@ -1017,7 +1056,7 @@ public class App {
         series.sort(Comparator.comparingInt(s -> s.temporadas));
         for (Serie s : series) {
             System.out.println("\n--- Série(" + s.id + ") ---");
-            escreverSerie(s);
+            escreverSerie(s, -2);
         }
     }
 
@@ -1053,7 +1092,7 @@ public class App {
 
 //Usuários
 
-    public static void carregarUsuariosNoArray(ArrayList<Usuario> usuarios, String raizUsuarios) {
+    public static void carregarUsuariosNoArray(ArrayList<Usuario> usuarios, String raizUsuarios, String raizUsuariosFilmes, String raizUsuariosSeries) {
         File dir = new File(raizUsuarios);
         if (!dir.exists() || !dir.isDirectory()) {
             return;
@@ -1088,9 +1127,130 @@ public class App {
                 }
             }
         }
+        for (Usuario u : usuarios) {
+            dir = new File(raizUsuariosFilmes + u.id);
+            if (!dir.exists()) {
+                dir.mkdir();
+            }
+            dir = new File(raizUsuariosSeries + u.id);
+            if (!dir.exists()) {
+                dir.mkdir();
+            }
+        }
     }
 
-    public static void gerenciarUsuarios(ArrayList<Usuario> usuarios, String raizUsuarios, String arqIdUsuario) {
+    public static void carregarFilmesUsuario(Usuario u, String raizUsuariosFilmes) {
+        File dir = new File(raizUsuariosFilmes + u.id + "/");
+        if (!dir.exists() || !dir.isDirectory()) {
+            return;
+        }
+        File[] arquivos = dir.listFiles();
+        if (arquivos == null)
+            return;
+        for (File arquivo : arquivos) {
+            if (arquivo.isFile()) {
+                try (BufferedReader br = new BufferedReader(new FileReader(arquivo))) {
+
+                    Filme f = new Filme();
+                    ArrayList<String> generos = new ArrayList<>();
+                    String linha;
+
+                    while ((linha = br.readLine()) != null) {
+                        if (linha.startsWith("ID:")) {
+                            f.id = Integer.parseInt(linha.substring(4).trim());
+                        } else if (linha.startsWith("Nome:")) {
+                            f.nome = linha.substring(6).trim();
+                        } else if (linha.startsWith("Estreia:")) {
+                            String data = linha.substring(9).trim();
+                            String[] partes = data.split("/");
+                            f.data = new Estreia();
+                            f.data.dia = Integer.parseInt(partes[0]);
+                            f.data.mes = Integer.parseInt(partes[1]);
+                            f.data.ano = Integer.parseInt(partes[2]);
+                        } else if (linha.startsWith("Duração:")) {
+                            String[] partes = linha.substring(9).trim().split(" ");
+                            f.tempo = new Tempo();
+                            f.tempo.horas = Integer.parseInt(partes[0].replace("h", ""));
+                            f.tempo.minutos = Integer.parseInt(partes[1].replace("m", ""));
+                        } else if (linha.startsWith("Gêneros:")) {
+                            String g = linha.substring(8).trim();
+                            String[] gSplit = g.split("/");
+                            for (String gen : gSplit) {
+                                if (!gen.isEmpty()) {
+                                    generos.add(gen);
+                                }
+                            }
+                            f.genero = new String[generos.size()];
+                            f.genero = generos.toArray(f.genero);
+                        } else if (linha.startsWith("Categoria:")) {
+                            f.categoria = linha.substring(11).trim();
+                        }
+                    }
+
+                    u.filmes.add(f);
+
+                } catch (IOException e) {
+                    System.out.println("Erro ao ler arquivo: " + arquivo.getName());
+                }
+            }
+        }
+    }
+
+    public static void carregarSeriesUsuario(Usuario u, String raizUsuariosSeries) {
+        File dir = new File(raizUsuariosSeries + u.id + "/");
+
+        if (!dir.exists() || !dir.isDirectory()) {
+            return;
+        }
+
+        File[] arquivos = dir.listFiles();
+        if (arquivos == null) return;
+
+        for (File arquivo : arquivos) {
+            if (arquivo.isFile()) {
+                try (BufferedReader br = new BufferedReader(new FileReader(arquivo))) {
+                    Serie s = new Serie();
+                    ArrayList<String> generos = new ArrayList<>();
+                    String linha;
+                    while ((linha = br.readLine()) != null) {
+                        if (linha.startsWith("ID:")) {
+                            s.id = Integer.parseInt(linha.substring(4).trim());
+                        } else if (linha.startsWith("Nome:")) {
+                            s.nome = linha.substring(6).trim();
+                        } else if (linha.startsWith("Estreia:")) {
+                            String data = linha.substring(9).trim();
+                            String[] partes = data.split("/");
+                            s.data = new Estreia();
+                            s.data.dia = Integer.parseInt(partes[0]);
+                            s.data.mes = Integer.parseInt(partes[1]);
+                            s.data.ano = Integer.parseInt(partes[2]);
+                        } else if (linha.startsWith("Temporadas:")) {
+                            s.temporadas = Integer.parseInt(linha.substring(12).trim());
+                        } else if (linha.startsWith("Episódios:")) {
+                            s.episodios = Integer.parseInt(linha.substring(11).trim());
+                        } else if (linha.startsWith("Gêneros:")) {
+                            String g = linha.substring(8).trim();
+                            String[] gSplit = g.split("/");
+                            for (String gen : gSplit) {
+                                if (!gen.isEmpty()) {
+                                    generos.add(gen);
+                                }
+                            }
+                            s.genero = new String[generos.size()];
+                            s.genero = generos.toArray(s.genero);
+                        } else if (linha.startsWith("Categoria:")) {
+                            s.categoria = linha.substring(11).trim();
+                        }
+                    }
+                    u.series.add(s);
+                } catch (IOException e) {
+                    System.out.println("Erro ao ler arquivo: " + arquivo.getName());
+                }
+            }
+        }
+    }
+
+    public static void gerenciarUsuarios(ArrayList<Filme> filmes, ArrayList<Serie> series, ArrayList<Usuario> usuarios, String raizUsuarios, String raizUsuariosFilmes, String raizUsuariosSeries, String arqIdUsuario) {
         Scanner sc = new Scanner(System.in);
         int opcao;
         do {
@@ -1101,7 +1261,7 @@ public class App {
                     cadastrarUsuario(usuarios, raizUsuarios, arqIdUsuario);
                     break;
                 case 2://logar
-                    logarUsuario(usuarios);
+                    logarUsuario(filmes, series,  usuarios, raizUsuariosFilmes, raizUsuariosSeries);
                     break;
                 case 3://voltar
                     System.out.println("Voltando");
@@ -1110,7 +1270,7 @@ public class App {
                     System.out.println("Essa opção não existe!");
                     break;
             }
-        } while (opcao != 5);
+        } while (opcao != 3);
     }
 
     public static Usuario criarUsuario(ArrayList<Usuario> usuarios, int id) {
@@ -1178,6 +1338,80 @@ public class App {
         return true;
     }
 
+    public static boolean gravarFilmeSerieUsuario(Usuario u, String tipo, String raizUsuariosFilmes, String raizUsuariosSeries) {
+        try {
+            if (tipo.equals("filme")) {
+                for (Filme f : u.filmes) {
+                    PrintWriter pw = new PrintWriter((raizUsuariosFilmes + u.id + "/") + f.id);
+                    pw.append("ID: " + f.id + "\n");
+                    pw.append("Nome: " + f.nome + "\n");
+                    pw.append("Estreia: ");
+                    if (f.data.dia < 10) {
+                        pw.append("0" + f.data.dia + "/");
+                    } else {
+                        pw.append(f.data.dia + "/");
+                    }
+                    if (f.data.mes < 10) {
+                        pw.append("0" + f.data.mes + "/");
+                    } else {
+                        pw.append(f.data.mes + "/");
+                    }
+                    pw.append(f.data.ano + "\n");
+                    pw.append("Duração: " + f.tempo.horas + "h " + f.tempo.minutos + "m\n");
+                    pw.append("Gêneros: ");
+                    for (int i = 0; i < f.genero.length; i++) {
+                        if (f.genero[i] != null) {
+                            pw.append(f.genero[i]);
+                        }
+                        if (i < (f.genero.length - 1) && f.genero[i + 1] != null) {
+                            pw.append("/");
+                        }
+                    }
+                    pw.append("\nCategoria: " + f.categoria);
+                    pw.flush();
+                    pw.close();
+                }
+            }
+            if (tipo.equals("série")) {
+                for (Serie s : u.series) {
+                    PrintWriter pw = new PrintWriter((raizUsuariosSeries + u.id + "/") + s.id);
+                    pw.append("ID: " + s.id + "\n");
+                    pw.append("Nome: " + s.nome + "\n");
+                    pw.append("Estreia: ");
+                    if (s.data.dia < 10) {
+                        pw.append("0" + s.data.dia + "/");
+                    } else {
+                        pw.append(s.data.dia + "/");
+                    }
+                    if (s.data.mes < 10) {
+                        pw.append("0" + s.data.mes + "/");
+                    } else {
+                        pw.append(s.data.mes + "/");
+                    }
+                    pw.append(s.data.ano + "\n");
+                    pw.append("Temporadas: " + s.temporadas + "\n");
+                    pw.append("Episódios: " + s.episodios + "\n");
+                    pw.append("Gêneros: ");
+                    for (int i = 0; i < s.genero.length; i++) {
+                        if (s.genero[i] != null) {
+                            pw.append(s.genero[i]);
+                        }
+                        if (i < (s.genero.length - 1) && s.genero[i + 1] != null) {
+                            pw.append("/");
+                        }
+                    }
+                    pw.append("\nCategoria: " + s.categoria);
+                    pw.flush();
+                    pw.close();
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
     public static void cadastrarUsuario(ArrayList<Usuario> usuarios, String raizUsuarios, String arqIdUsuario) {
         int id = leId(arqIdUsuario);
         Usuario u = criarUsuario(usuarios, id);
@@ -1195,28 +1429,29 @@ public class App {
         usuarios.add(u);
     }
 
-    public static void logarUsuario(ArrayList<Usuario> usuarios) {
+    public static void logarUsuario(ArrayList<Filme> filmes, ArrayList<Serie> series, ArrayList<Usuario> usuarios, String raizUsuariosFilmes, String raizUsuariosSeries) {
         Scanner sc = new Scanner(System.in);
         Usuario u = loginUsuario(usuarios);
+        int opcao = 0;
         if (u.login) {
-            menuDeLogin();
-            int opcao = sc.nextInt();
-            switch (opcao) {
-                case 1:
-                    infoUsuario(u);
-                    break;
-                case 2:
-                    menuFilmesSeries("Filmes");
-                    break;
-                case 3:
-                    menuFilmesSeries("Séries");
-                    break;
-                case 4:
-                    break;
-                case 5:
-                    break;
-            }
+            do {
+                menuDeLogin();
+                opcao = sc.nextInt();
+                switch (opcao) {
+                    case 1:
+                        infoUsuario(u);
+                        break;
+                    case 2:
+                        f(filmes, u, raizUsuariosFilmes);
+                        break;
+                    case 3:
+                        s(series, u, raizUsuariosSeries);
+                        break;
+                    case 4:
+                        break;
 
+                }
+            } while (opcao != 4);
         } else {
             return;
         }
@@ -1237,17 +1472,14 @@ public class App {
         System.out.println("Senha: ");
         String senha = sc.nextLine();
         for (Usuario u : usuarios) {
-            if (u.email.equals(email) && u.senha.equals(senha)) {
-                System.out.println("Login Concluído!");
-                u.login = true;
-                return u;
-            } else if (u.email.equals(email) && !u.senha.equals(senha)) {
+            if (u.email.equals(email) && !u.senha.equals(senha)) {
                 int i = 1;
                 while (i <= 4 && !u.senha.equals(senha)) {
                     if (i < 4) {
                         System.out.println("Senha Errada! Tente novamente: ");
                         senha = sc.nextLine();
-                    } if(i == 4) {
+
+                    } else if (i == 4) {
                         System.out.println("Você atingiu a quantidade máxima de tentativas! Volte para a aba de login.");
                         u.login = false;
                         return u;
@@ -1255,9 +1487,15 @@ public class App {
                     i++;
                 }
             }
+            if (u.email.equals(email) && u.senha.equals(senha)) {
+                System.out.println("Login Concluído!");
+                u.login = true;
+                return u;
+            }
         }
         return null;
     }
+
     public static void infoUsuario(Usuario u) {
         System.out.println("\nPerfil");
         System.out.println("-----------------------"
@@ -1266,5 +1504,193 @@ public class App {
                 + "\nTelefone: " + u.telefone
                 + "\nSenha: " + u.senha
                 + "\n-----------------------");
+    }
+
+    public static void f(ArrayList<Filme> filmes, Usuario u, String raizUsuariosFilmes) {
+        Scanner sc = new Scanner(System.in);
+        int opcao = 0;
+        int mins = 0;
+        do {
+            menuFilmesSeries("Filmes");
+            opcao = sc.nextInt();
+            if (opcao == 1) {
+                mins = adicionarFilme(filmes, u, raizUsuariosFilmes);
+            } else if (opcao == 2) {
+                if (u.filmes != null) {
+                    for (Filme f : u.filmes) {
+                        if (f.categoria.equals("Assistindo")) {
+                            escreverFilme(f, mins);
+                            System.out.println("Categoria: " + f.categoria);
+                        }
+                    }
+                } else {
+                    return;
+                }
+            } else if (opcao == 3) {
+                if (u.filmes != null) {
+                    for (Filme f : u.filmes) {
+                        if (f.categoria.equals("Para Assistir")) {
+                            escreverFilme(f, 0);
+                            System.out.println("Categoria: " + f.categoria);
+                        }
+                    }
+                } else {
+                    return;
+                }
+            } else if (opcao == 4) {
+                if (u.filmes != null) {
+                    for (Filme f : u.filmes) {
+                        if (f.categoria.equals("Concluído")) {
+                            escreverFilme(f, -1);
+                            System.out.println("Categoria: " + f.categoria);
+                        }
+                    }
+                } else {
+                    return;
+                }
+            } else if (opcao == 5) {
+                int assistindo = 0;
+                int paraAssistir = 0;
+                int concluido = 0;
+                if (u.filmes != null) {
+                    for (Filme f : u.filmes) {
+                        if (f.categoria.equals("Assistindo")) {
+                            assistindo++;
+                        }
+                        if (f.categoria.equals("Para Assistir")) {
+                            paraAssistir++;
+                        }
+                        if (f.categoria.equals("Concluído")) {
+                            concluido++;
+                        }
+                    }
+                    System.out.println("Filmes Assistindo: " + assistindo);
+                    System.out.println("Filmes Para Assistir: " + paraAssistir);
+                    System.out.println("Filmes Concluídos: " + concluido);
+                }
+            }
+        } while (opcao != 6);
+    }
+
+    public static int adicionarFilme(ArrayList<Filme> filmes, Usuario u, String raizUsuariosFilmes) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Informe o ID do filme que quer adicionar a sua lista: ");
+        int id = sc.nextInt();
+        for (Filme f : filmes) {
+            if (f.id == id) {
+                System.out.println("Informe qual categoria quer adicionar esse filme: \n"
+                        + "1)Assistindo\n"
+                        + "2)Para Assistir\n"
+                        + "3)Concluído");
+                int opcao = sc.nextInt();
+                if (opcao == 1) {
+                    f.categoria = "Assistindo";
+                    System.out.println("Informe quantos minutos do filme você já assistiu: ");
+                    int min = sc.nextInt();
+                    return min;
+                } else if (opcao == 2) {
+                    f.categoria = "Para Assistir";
+                } else if (opcao == 3) {
+                    f.categoria = "Concluído";
+                }
+                u.filmes.add(f);
+                gravarFilmeSerieUsuario(u, "filme", raizUsuariosFilmes, "");
+            }
+        }
+        return id;
+    }
+
+    public static void s(ArrayList<Serie> series, Usuario u, String raizUsuariosSeries) {
+        Scanner sc = new Scanner(System.in);
+        int opcao = 0;
+        int eps = 0;
+        do {
+            menuFilmesSeries("Séries");
+            opcao = sc.nextInt();
+            if (opcao == 1) {
+                eps = adicionarSerie(series, u, raizUsuariosSeries);
+            } else if (opcao == 2) {
+                if (u.series != null) {
+                    for (Serie s : u.series) {
+                        if (s.categoria.equals("Assistindo")) {
+                            escreverSerie(s, eps);
+                            System.out.println("Categoria: " + s.categoria);
+                        }
+                    }
+                } else {
+                    return;
+                }
+            } else if (opcao == 3) {
+                if (u.series != null) {
+                    for (Serie s : u.series) {
+                        if (s.categoria.equals("Para Assistir")) {
+                            escreverSerie(s, 0);
+                            System.out.println("Categoria: " + s.categoria);
+                        }
+                    }
+                } else {
+                    return;
+                }
+            } else if (opcao == 4) {
+                if (u.series != null) {
+                    for (Serie s: u.series) {
+                        if (s.categoria.equals("Concluído")) {
+                            escreverSerie(s, -1);
+                            System.out.println("Categoria: " + s.categoria);
+                        }
+                    }
+                } else {
+                    return;
+                }
+            } else if (opcao == 5) {
+                int assistindo = 0;
+                int paraAssistir = 0;
+                int concluido = 0;
+                if (u.series != null) {
+                    for (Serie s : u.series) {
+                        if (s.categoria.equals("Assistindo")) {
+                            assistindo++;
+                        }
+                        if (s.categoria.equals("Para Assistir")) {
+                            paraAssistir++;
+                        }
+                        if (s.categoria.equals("Concluído")) {
+                            concluido++;
+                        }
+                    }
+                    System.out.println("Séries Assistindo: " + assistindo);
+                    System.out.println("Séries Para Assistir: " + paraAssistir);
+                    System.out.println("Séries Concluídos: " + concluido);
+                }
+            }
+        } while (opcao != 6);
+    }
+
+    public static int adicionarSerie(ArrayList<Serie> series, Usuario u, String raizUsuariosSeries) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Informe o ID da série que quer adicionar a sua lista: ");
+        int id = sc.nextInt();
+        for (Serie s : series) {
+            if (s.id == id) {
+                System.out.println("Informe qual categoria quer adicionar para essa série: \n"
+                        + "1)Assistindo\n"
+                        + "2)Para Assistir\n"
+                        + "3)Concluído");
+                int opcao = sc.nextInt();
+                if (opcao == 1) {
+                    s.categoria = "Assistindo";
+                    System.out.println("Informe quantos episódios dessa série você já assistiu: ");
+                    int ep = sc.nextInt();
+                    return ep;
+                } else if (opcao == 2) {
+                    s.categoria = "Para Assistir";
+                } else if (opcao == 3) {
+                    s.categoria = "Concluído";
+                }
+                u.series.add(s);
+                gravarFilmeSerieUsuario(u, "série", "", raizUsuariosSeries);
+            }
+        }
+        return id;
     }
 }
