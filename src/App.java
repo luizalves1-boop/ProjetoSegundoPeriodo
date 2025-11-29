@@ -172,7 +172,7 @@ public class App {
                 "\n1) Adicionar/Editar" +
                 "\n2) Assistindo" +
                 "\n3) Para Assistir" +
-                "\n4) Concluídos" +
+                "\n4) Concluídos/Concluídas" +
                 "\n5) Informações Totais" +
                 "\n6) Sair" +
                 "\n-----------------------");
@@ -1649,7 +1649,7 @@ public class App {
             } else if (opcao == 4) {
                 if (u.series != null) {
                     for (Serie s : u.series) {
-                        if (s.categoria.equals("Concluído")) {
+                        if (s.categoria.equals("Concluída")) {
                             escreverSerie(s);
                             System.out.println("Categoria: " + s.categoria);
                         }
@@ -1660,7 +1660,7 @@ public class App {
             } else if (opcao == 5) {
                 int assistindo = 0;
                 int paraAssistir = 0;
-                int concluido = 0;
+                int concluida = 0;
                 if (u.series != null) {
                     for (Serie s : u.series) {
                         if (s.categoria.equals("Assistindo")) {
@@ -1669,13 +1669,13 @@ public class App {
                         if (s.categoria.equals("Para Assistir")) {
                             paraAssistir++;
                         }
-                        if (s.categoria.equals("Concluído")) {
-                            concluido++;
+                        if (s.categoria.equals("Concluída")) {
+                            concluida++;
                         }
                     }
                     System.out.println("Séries Assistindo: " + assistindo);
                     System.out.println("Séries Para Assistir: " + paraAssistir);
-                    System.out.println("Séries Concluídos: " + concluido);
+                    System.out.println("Séries Concluídas: " + concluida);
                 }
             }
         } while (opcao != 6);
@@ -1710,7 +1710,7 @@ public class App {
 
                 }
                 if (opcao == 3) {
-                    copia.categoria = "Concluído";
+                    copia.categoria = "Concluída";
                     copia.episodiosAssistidos = s.episodios;
                     u.series.add(copia);
                     gravarFilmeSerieUsuario(u, "série", "", raizUsuariosSeries);
