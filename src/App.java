@@ -1345,6 +1345,14 @@ public class App {
     }
 
     public static boolean gravarFilmeSerieUsuario(Usuario u, String tipo, String raizUsuariosFilmes, String raizUsuariosSeries) {
+        File dir = new File(raizUsuariosFilmes + u.id + "/");
+        if (!dir.exists()) {
+            dir.mkdir();
+        }
+        dir = new File( raizUsuariosSeries + u.id + "/");
+        if (!dir.exists()) {
+            dir.mkdir();
+        }
         try {
             if (tipo.equals("filme")) {
                 for (Filme f : u.filmes) {
@@ -1424,9 +1432,10 @@ public class App {
         int id2 = u.id;
         if (gravarUsuario(u, raizUsuarios)) {
             usuarios.add(u);
+
             gravaId(++id, arqIdUsuario);
         } else {
-            System.out.println("Não foi possível gravar a usuário!");
+            System.out.println("Não foi possível cadastrar o usuário!");
         }
         System.out.println();
     }
