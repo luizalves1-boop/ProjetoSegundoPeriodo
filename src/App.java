@@ -172,7 +172,7 @@ public class App {
                 "\n3) Para Assistir" +
                 "\n4) Concluídos/Concluídas" +
                 "\n5) Informações Totais" +
-                "\n6) Sair" +
+                "\n6) Voltar" +
                 "\n-----------------------");
         System.out.println("Opção: ");
     }
