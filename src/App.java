@@ -24,6 +24,8 @@ public class App {
         carregarSeriesNoArray(series, raizSeries);
         carregarUsuariosNoArray(usuarios, raizUsuarios, raizUsuariosFilmes, raizUsuariosSeries);
         for (Usuario u : usuarios) {
+            u.series.clear();
+            u.filmes.clear();
             carregarFilmesUsuario(u, raizUsuariosFilmes);
             carregarSeriesUsuario(u, raizUsuariosSeries);
         }
@@ -416,7 +418,7 @@ public class App {
         }
     }
 
-    public static void escreverFilme(Filme f, int mins) {
+    public static void escreverFilme(Filme f) {
         System.out.println("ID: " + f.id);
         System.out.println("Nome: " + f.nome);
         System.out.print("Estreia: ");
@@ -431,16 +433,10 @@ public class App {
             System.out.print(f.data.mes + "/");
         }
         System.out.println(f.data.ano);
-        if (mins == -2) {
+        if (f.categoria != null){
+            System.out.println("Duração: " + f.tempoAssistido.horas + "h " + f.tempoAssistido.minutos + "m/" + f.tempo.horas + "h " + f.tempo.minutos + "m");
+        } else {
             System.out.println("Duração: " + f.tempo.horas + "h " + f.tempo.minutos + "m");
-        } else if (mins == 0) {
-            System.out.println("Duração: " + 0 + "h " + 0 + "m/" + f.tempo.horas + "h " + f.tempo.minutos + "m");
-        } else if (mins == -1) {
-            System.out.println("Duração: " + f.tempo.horas + "h " + f.tempo.minutos + "m/" + f.tempo.horas + "h " + f.tempo.minutos + "m");
-        } else if (mins > 0) {
-            int hr = mins / 60;
-            int min = mins % 60;
-            System.out.println("Duração: " + hr + "h " + min + "m/" + f.tempo.horas + "h " + f.tempo.minutos + "m");
         }
         System.out.print("Gêneros: ");
         for (int i = 0; i < f.genero.length; i++) {
@@ -486,7 +482,7 @@ public class App {
         for (Filme f : filmes) {
             if (f.id == id) {
                 System.out.println("\n--- Filme encontrado (" + f.id + ") ---");
-                escreverFilme(f, -2);
+                escreverFilme(f);
                 encontrado = true;
             }
         }
@@ -503,7 +499,7 @@ public class App {
         for (Filme f : filmes) {
             if (f.nome.equals(nome)) {
                 System.out.println("\n--- Filme encontrado (" + f.id + ") ---");
-                escreverFilme(f, -2);
+                escreverFilme(f);
                 encontrado = true;
             }
         }
@@ -535,7 +531,7 @@ public class App {
             String dataf = dia + mes + ano;
             if (dataf.equals(data)) {
                 System.out.println("\n--- Filme encontrado (" + f.id + ") ---");
-                escreverFilme(f, -2);
+                escreverFilme(f);
                 encontrado = true;
             }
         }
@@ -553,7 +549,7 @@ public class App {
             for (int i = 0; i < f.genero.length; i++) {
                 if (f.genero[i] != null && !f.genero[i].isEmpty() && f.genero[i].equals(genero)) {
                     System.out.println("\n--- Filme encontrado (" + f.id + ") ---");
-                    escreverFilme(f, -2);
+                    escreverFilme(f);
                     encontrado = true;
                 }
             }
@@ -591,7 +587,7 @@ public class App {
         filmes.sort(Comparator.comparingInt(f -> f.id));
         for (Filme f : filmes) {
             System.out.println("\n--- Filme(" + f.id + ") ---");
-            escreverFilme(f, -2);
+            escreverFilme(f);
         }
     }
 
@@ -600,7 +596,7 @@ public class App {
         filmes.sort(Comparator.comparing(f -> f.nome));
         for (Filme f : filmes) {
             System.out.println("\n--- Filme(" + f.id + ") ---");
-            escreverFilme(f, -2);
+            escreverFilme(f);
         }
     }
 
@@ -611,7 +607,7 @@ public class App {
                 .thenComparingInt(f -> f.data.dia));
         for (Filme f : filmes) {
             System.out.println("\n--- Filme(" + f.id + ") ---");
-            escreverFilme(f, -2);
+            escreverFilme(f);
         }
     }
 
@@ -620,7 +616,7 @@ public class App {
         filmes.sort(Comparator.comparingInt(f -> f.tempo.horas * 60 + f.tempo.minutos));
         for (Filme f : filmes) {
             System.out.println("\n--- Filme(" + f.id + ") ---");
-            escreverFilme(f, -2);
+            escreverFilme(f);
         }
     }
 
@@ -852,7 +848,7 @@ public class App {
         }
     }
 
-    public static void escreverSerie(Serie s, int eps) {
+    public static void escreverSerie(Serie s) {
         System.out.println("ID: " + s.id);
         System.out.println("Nome: " + s.nome);
         System.out.print("Estreia: ");
@@ -868,14 +864,10 @@ public class App {
         }
         System.out.println(s.data.ano);
         System.out.println("Temporadas: " + s.temporadas);
-        if (eps == -2) {
+        if (s.categoria != null) {
+            System.out.println("Episódios: " + s.episodiosAssistidos + "/" + s.episodios);
+        } else {
             System.out.println("Episódios: " + s.episodios);
-        } else if (eps == 0) {
-            System.out.println("Episódios: " + "0/" + s.episodios);
-        } else if (eps == -1) {
-            System.out.println("Episódios: " + s.episodios + "/" + s.episodios);
-        } else if (eps > 0) {
-            System.out.println("Episódios: " + eps + "/" + s.episodios);
         }
         System.out.print("Gêneros: ");
         for (int i = 0; i < s.genero.length; i++) {
@@ -921,7 +913,7 @@ public class App {
         for (Serie s : series) {
             if (s.id == id) {
                 System.out.println("\n--- Série encontrada (" + s.id + ") ---");
-                escreverSerie(s, -2);
+                escreverSerie(s);
                 encontrado = true;
             }
         }
@@ -938,7 +930,7 @@ public class App {
         for (Serie s : series) {
             if (s.nome.equals(nome)) {
                 System.out.println("\n--- Série encontrada (" + s.id + ") ---");
-                escreverSerie(s, -2);
+                escreverSerie(s);
                 encontrado = true;
             }
         }
@@ -970,7 +962,7 @@ public class App {
             String dataf = dia + mes + ano;
             if (dataf.equals(data)) {
                 System.out.println("\n--- Série encontrada (" + s.id + ") ---");
-                escreverSerie(s, -2);
+                escreverSerie(s);
                 encontrado = true;
             }
         }
@@ -988,7 +980,7 @@ public class App {
             for (int i = 0; i < s.genero.length; i++) {
                 if (s.genero[i] != null && !s.genero[i].isEmpty() && s.genero[i].equals(genero)) {
                     System.out.println("\n--- Série encontrada (" + s.id + ") ---");
-                    escreverSerie(s, -2);
+                    escreverSerie(s);
                     encontrado = true;
                 }
             }
@@ -1026,7 +1018,7 @@ public class App {
         series.sort(Comparator.comparingInt(s -> s.id));
         for (Serie s : series) {
             System.out.println("\n--- Série(" + s.id + ") ---");
-            escreverSerie(s, -2);
+            escreverSerie(s);
         }
     }
 
@@ -1035,7 +1027,7 @@ public class App {
         series.sort(Comparator.comparing(s -> s.nome));
         for (Serie s : series) {
             System.out.println("\n--- Série(" + s.id + ") ---");
-            escreverSerie(s, -2);
+            escreverSerie(s);
         }
     }
 
@@ -1046,7 +1038,7 @@ public class App {
                 .thenComparingInt(s -> s.data.dia));
         for (Serie s : series) {
             System.out.println("\n--- Série(" + s.id + ") ---");
-            escreverSerie(s, -2);
+            escreverSerie(s);
         }
     }
 
@@ -1055,7 +1047,7 @@ public class App {
         series.sort(Comparator.comparingInt(s -> s.temporadas));
         for (Serie s : series) {
             System.out.println("\n--- Série(" + s.id + ") ---");
-            escreverSerie(s, -2);
+            escreverSerie(s);
         }
     }
 
@@ -1167,14 +1159,20 @@ public class App {
                             f.data.mes = Integer.parseInt(partes[1]);
                             f.data.ano = Integer.parseInt(partes[2]);
                         } else if (linha.startsWith("Duração:")) {
-                            String duracao = linha.substring(9).trim();
-                            if (duracao.contains("/")) {
-                                duracao = duracao.substring(duracao.indexOf("/") + 1).trim();
+                            String duracao = linha.substring(9).trim();  // "0h 0m/2h 25m"
+                            String[] partesDuracao = duracao.split("/");
+                            String assistido = partesDuracao[0].trim();
+                            String[] a = assistido.split(" ");
+                            f.tempoAssistido = new Tempo();
+                            f.tempoAssistido.horas = Integer.parseInt(a[0].replace("h", ""));
+                            f.tempoAssistido.minutos = Integer.parseInt(a[1].replace("m", ""));
+                            if (partesDuracao.length > 1) {
+                                String total = partesDuracao[1].trim();
+                                String[] t = total.split(" ");
+                                f.tempo = new Tempo();
+                                f.tempo.horas = Integer.parseInt(t[0].replace("h", ""));
+                                f.tempo.minutos = Integer.parseInt(t[1].replace("m", ""));
                             }
-                            String[] partes = duracao.split(" ");
-                            f.tempo = new Tempo();
-                            f.tempo.horas = Integer.parseInt(partes[0].replace("h", ""));
-                            f.tempo.minutos = Integer.parseInt(partes[1].replace("m", ""));
                         } else if (linha.startsWith("Gêneros:")) {
                             String g = linha.substring(8).trim();
                             String[] gSplit = g.split("/");
@@ -1230,11 +1228,12 @@ public class App {
                         } else if (linha.startsWith("Temporadas:")) {
                             s.temporadas = Integer.parseInt(linha.substring(12).trim());
                         } else if (linha.startsWith("Episódios:")) {
-                            String ep = linha.substring(11).trim();
+                            String ep = linha.substring(11).trim();  // "15/31"
                             if (ep.contains("/")) {
-                                ep = ep.substring(ep.indexOf("/") + 1).trim();
+                                String[] partes = ep.split("/");
+                                s.episodiosAssistidos = Integer.parseInt(partes[0].trim());
+                                s.episodios = Integer.parseInt(partes[1].trim());
                             }
-                            s.episodios = Integer.parseInt(ep);
                         } else if (linha.startsWith("Gêneros:")) {
                             String g = linha.substring(8).trim();
                             String[] gSplit = g.split("/");
@@ -1345,7 +1344,7 @@ public class App {
         return true;
     }
 
-    public static boolean gravarFilmeSerieUsuario(Usuario u, String tipo, String raizUsuariosFilmes, String raizUsuariosSeries, int assistido) {
+    public static boolean gravarFilmeSerieUsuario(Usuario u, String tipo, String raizUsuariosFilmes, String raizUsuariosSeries) {
         try {
             if (tipo.equals("filme")) {
                 for (Filme f : u.filmes) {
@@ -1364,15 +1363,7 @@ public class App {
                         pw.append(f.data.mes + "/");
                     }
                     pw.append(f.data.ano + "\n");
-                    if (assistido == 0) {
-                        pw.append("Duração: " + 0 + "h " + 0 + "m/" + f.tempo.horas + "h " + f.tempo.minutos + "m\n");
-                    } else if (assistido == -1) {
-                        pw.append("Duração: " + f.tempo.horas + "h " + f.tempo.minutos + "m/" + f.tempo.horas + "h " + f.tempo.minutos + "m\n");
-                    } else if (assistido > 0) {
-                        int hr = assistido / 60;
-                        int min = assistido % 60;
-                        pw.append("Duração: " + hr + "h " + min + "m/" + f.tempo.horas + "h " + f.tempo.minutos + "m\n");
-                    }
+                    pw.append("Duração: " + f.tempoAssistido.horas + "h " + f.tempoAssistido.minutos + "m/" + f.tempo.horas + "h " + f.tempo.minutos + "m\n");
                     pw.append("Gêneros: ");
                     for (int i = 0; i < f.genero.length; i++) {
                         if (f.genero[i] != null) {
@@ -1405,13 +1396,7 @@ public class App {
                     }
                     pw.append(s.data.ano + "\n");
                     pw.append("Temporadas: " + s.temporadas + "\n");
-                    if (assistido == 0) {
-                        pw.append("Episódios: " + "0/" + s.episodios + "\n");
-                    } else if (assistido == -1) {
-                        pw.append("Episódios: " + s.episodios + "/" + s.episodios + "\n");
-                    } else if (assistido > 0) {
-                        pw.append("Episódios: " + assistido + "/" + s.episodios + "\n");
-                    }
+                    pw.append("Episódios: " + s.episodiosAssistidos + "/" + s.episodios + "\n");
                     pw.append("Gêneros: ");
                     for (int i = 0; i < s.genero.length; i++) {
                         if (s.genero[i] != null) {
@@ -1535,12 +1520,12 @@ public class App {
             menuFilmesSeries("Filmes");
             opcao = sc.nextInt();
             if (opcao == 1) {
-                mins = adicionarEditarFilme(filmes, u, raizUsuariosFilmes);
+                adicionarEditarFilme(filmes, u, raizUsuariosFilmes);
             } else if (opcao == 2) {
                 if (u.filmes != null) {
                     for (Filme f : u.filmes) {
                         if (f.categoria.equals("Assistindo")) {
-                            escreverFilme(f, mins);
+                            escreverFilme(f);
                             System.out.println("Categoria: " + f.categoria);
                         }
                     }
@@ -1551,7 +1536,7 @@ public class App {
                 if (u.filmes != null) {
                     for (Filme f : u.filmes) {
                         if (f.categoria.equals("Para Assistir")) {
-                            escreverFilme(f, 0);
+                            escreverFilme(f);
                             System.out.println("Categoria: " + f.categoria);
                         }
                     }
@@ -1562,7 +1547,7 @@ public class App {
                 if (u.filmes != null) {
                     for (Filme f : u.filmes) {
                         if (f.categoria.equals("Concluído")) {
-                            escreverFilme(f, -1);
+                            escreverFilme(f);
                             System.out.println("Categoria: " + f.categoria);
                         }
                     }
@@ -1593,12 +1578,13 @@ public class App {
         } while (opcao != 6);
     }
 
-    public static int adicionarEditarFilme(ArrayList<Filme> filmes, Usuario u, String raizUsuariosFilmes) {
+    public static void adicionarEditarFilme(ArrayList<Filme> filmes, Usuario u, String raizUsuariosFilmes) {
         Scanner sc = new Scanner(System.in);
         listarIdFilme(filmes);
         System.out.println("\nInforme o ID do filme que quer adicionar/editar na sua lista: ");
         int id = sc.nextInt();
         for (Filme f : filmes) {
+            Filme copia = copiarFilme(f);
             if (f.id == id) {
                 System.out.println("Informe qual categoria quer adicionar esse filme: \n"
                         + "1)Assistindo\n"
@@ -1606,41 +1592,43 @@ public class App {
                         + "3)Concluído");
                 int opcao = sc.nextInt();
                 if (opcao == 1) {
-                    f.categoria = "Assistindo";
+                    copia.categoria = "Assistindo";
                     System.out.println("Informe quantos minutos do filme você já assistiu: ");
-                    int min = sc.nextInt();
-                    u.filmes.add(f);
-                    gravarFilmeSerieUsuario(u, "filme", raizUsuariosFilmes, "", min);
-                    return min;
+                    int mins = sc.nextInt();
+                    copia.tempoAssistido.horas = mins / 60;
+                    copia.tempoAssistido.minutos = mins % 60;
+                    u.filmes.add(copia);
+                    gravarFilmeSerieUsuario(u, "filme", raizUsuariosFilmes, "");
                 } else if (opcao == 2) {
-                    f.categoria = "Para Assistir";
-                    u.filmes.add(f);
-                    gravarFilmeSerieUsuario(u, "filme", raizUsuariosFilmes, "", 0);
+                    copia.categoria = "Para Assistir";
+                    copia.tempoAssistido.horas = 0;
+                    copia.tempoAssistido.minutos = 0;
+                    u.filmes.add(copia);
+                    gravarFilmeSerieUsuario(u, "filme", raizUsuariosFilmes, "");
                 } else if (opcao == 3) {
-                    f.categoria = "Concluído";
-                    u.filmes.add(f);
-                    gravarFilmeSerieUsuario(u, "filme", raizUsuariosFilmes, "", -1);
+                    copia.categoria = "Concluído";
+                    copia.tempoAssistido.horas = f.tempo.horas;
+                    copia.tempoAssistido.minutos = f.tempo.minutos;
+                    u.filmes.add(copia);
+                    gravarFilmeSerieUsuario(u, "filme", raizUsuariosFilmes, "");
                 }
             }
         }
-        return 0;
     }
 
     public static void s(ArrayList<Serie> series, Usuario u, String raizUsuariosSeries) {
         Scanner sc = new Scanner(System.in);
         int opcao = 0;
-        int eps = 0;
         do {
             menuFilmesSeries("Séries");
             opcao = sc.nextInt();
             if (opcao == 1) {
-                eps = adicionarEditarSerie(series, u, raizUsuariosSeries);
-                System.out.println(eps);
+                adicionarEditarSerie(series, u, raizUsuariosSeries);
             } else if (opcao == 2) {
                 if (u.series != null) {
                     for (Serie s : u.series) {
                         if (s.categoria.equals("Assistindo")) {
-                            escreverSerie(s, eps);
+                            escreverSerie(s);
                             System.out.println("Categoria: " + s.categoria);
                         }
                     }
@@ -1651,7 +1639,7 @@ public class App {
                 if (u.series != null) {
                     for (Serie s : u.series) {
                         if (s.categoria.equals("Para Assistir")) {
-                            escreverSerie(s, 0);
+                            escreverSerie(s);
                             System.out.println("Categoria: " + s.categoria);
                         }
                     }
@@ -1662,7 +1650,7 @@ public class App {
                 if (u.series != null) {
                     for (Serie s : u.series) {
                         if (s.categoria.equals("Concluído")) {
-                            escreverSerie(s, -1);
+                            escreverSerie(s);
                             System.out.println("Categoria: " + s.categoria);
                         }
                     }
@@ -1693,12 +1681,13 @@ public class App {
         } while (opcao != 6);
     }
 
-    public static int adicionarEditarSerie(ArrayList<Serie> series, Usuario u, String raizUsuariosSeries) {
+    public static void adicionarEditarSerie(ArrayList<Serie> series, Usuario u, String raizUsuariosSeries) {
         Scanner sc = new Scanner(System.in);
         listarIdSerie(series);
         System.out.println("\nInforme o ID da série que quer adicionar/editar na sua lista: ");
         int id = sc.nextInt();
         for (Serie s : series) {
+            Serie copia = copiarSerie(s);
             if (s.id == id) {
                 System.out.println("Informe qual categoria quer adicionar para essa série: \n"
                         + "1)Assistindo\n"
@@ -1706,28 +1695,55 @@ public class App {
                         + "3)Concluído");
                 int opcao = sc.nextInt();
                 if (opcao == 1) {
-                    s.categoria = "Assistindo";
+                    copia.categoria = "Assistindo";
                     System.out.println("Informe quantos episódios dessa série você já assistiu: ");
-                    int eps = sc.nextInt();
-                    u.series.add(s);
-                    gravarFilmeSerieUsuario(u, "série", "", raizUsuariosSeries, eps);
-                    return eps;
+                    copia.episodiosAssistidos = sc.nextInt();
+                    u.series.add(copia);
+                    gravarFilmeSerieUsuario(u, "série", "", raizUsuariosSeries);
+
                 }
                 if (opcao == 2) {
-                    s.categoria = "Para Assistir";
-                    u.series.add(s);
-                    gravarFilmeSerieUsuario(u, "série", "", raizUsuariosSeries, 0);
-                    return 0;
+                    copia.categoria = "Para Assistir";
+                    copia.episodiosAssistidos = 0;
+                    u.series.add(copia);
+                    gravarFilmeSerieUsuario(u, "série", "", raizUsuariosSeries);
+
                 }
                 if (opcao == 3) {
-                    s.categoria = "Concluído";
-                    u.series.add(s);
-                    gravarFilmeSerieUsuario(u, "série", "", raizUsuariosSeries, -1);
-                    return 0;
+                    copia.categoria = "Concluído";
+                    copia.episodiosAssistidos = s.episodios;
+                    u.series.add(copia);
+                    gravarFilmeSerieUsuario(u, "série", "", raizUsuariosSeries);
                 }
 
             }
         }
-        return 0;
     }
+
+    public static Filme copiarFilme(Filme f) {
+        Filme i = new Filme();
+        i.id = f.id;
+        i.nome = f.nome;
+        i.data = f.data;
+        i.tempo = f.tempo;
+        i.genero = f.genero;
+        i.categoria = f.categoria;
+        i.tempoAssistido = f.tempoAssistido;
+        return i;
+
+    }
+
+    public static Serie copiarSerie(Serie s) {
+        Serie c = new Serie();
+        c.id = s.id;
+        c.nome = s.nome;
+        c.data = s.data;
+        c.temporadas = s.temporadas;
+        c.episodios = s.episodios;
+        c.genero = s.genero;
+        c.categoria = s.categoria;
+        c.episodiosAssistidos = s.episodiosAssistidos;
+        return c;
+    }
+
 }
