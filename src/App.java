@@ -167,7 +167,7 @@ public class App {
     public static void menuFilmesSeries(String menu) {
         System.out.println("\n" + menu);
         System.out.println("\n-----------------------" +
-                "\n1) Adicionar" +
+                "\n1) Adicionar/Editar" +
                 "\n2) Assistindo" +
                 "\n3) Para Assistir" +
                 "\n4) Concluídos" +
@@ -1535,7 +1535,7 @@ public class App {
             menuFilmesSeries("Filmes");
             opcao = sc.nextInt();
             if (opcao == 1) {
-                mins = adicionarFilme(filmes, u, raizUsuariosFilmes);
+                mins = adicionarEditarFilme(filmes, u, raizUsuariosFilmes);
             } else if (opcao == 2) {
                 if (u.filmes != null) {
                     for (Filme f : u.filmes) {
@@ -1593,10 +1593,10 @@ public class App {
         } while (opcao != 6);
     }
 
-    public static int adicionarFilme(ArrayList<Filme> filmes, Usuario u, String raizUsuariosFilmes) {
+    public static int adicionarEditarFilme(ArrayList<Filme> filmes, Usuario u, String raizUsuariosFilmes) {
         Scanner sc = new Scanner(System.in);
         listarIdFilme(filmes);
-        System.out.println("\nInforme o ID do filme que quer adicionar a sua lista: ");
+        System.out.println("\nInforme o ID do filme que quer adicionar/editar na sua lista: ");
         int id = sc.nextInt();
         for (Filme f : filmes) {
             if (f.id == id) {
@@ -1634,7 +1634,7 @@ public class App {
             menuFilmesSeries("Séries");
             opcao = sc.nextInt();
             if (opcao == 1) {
-                eps = adicionarSerie(series, u, raizUsuariosSeries);
+                eps = adicionarEditarSerie(series, u, raizUsuariosSeries);
                 System.out.println(eps);
             } else if (opcao == 2) {
                 if (u.series != null) {
@@ -1693,10 +1693,10 @@ public class App {
         } while (opcao != 6);
     }
 
-    public static int adicionarSerie(ArrayList<Serie> series, Usuario u, String raizUsuariosSeries) {
+    public static int adicionarEditarSerie(ArrayList<Serie> series, Usuario u, String raizUsuariosSeries) {
         Scanner sc = new Scanner(System.in);
         listarIdSerie(series);
-        System.out.println("\nInforme o ID da série que quer adicionar a sua lista: ");
+        System.out.println("\nInforme o ID da série que quer adicionar/editar na sua lista: ");
         int id = sc.nextInt();
         for (Serie s : series) {
             if (s.id == id) {
