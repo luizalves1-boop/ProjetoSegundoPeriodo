@@ -431,7 +431,7 @@ public class App {
             System.out.print(f.data.mes + "/");
         }
         System.out.println(f.data.ano);
-        if (f.categoria != null) {
+        if (f.estado != null) {
             System.out.println("Duração: " + f.tempoAssistido.horas + "h " + f.tempoAssistido.minutos + "m/" + f.tempo.horas + "h " + f.tempo.minutos + "m");
         } else {
             System.out.println("Duração: " + f.tempo.horas + "h " + f.tempo.minutos + "m");
@@ -862,7 +862,7 @@ public class App {
         }
         System.out.println(s.data.ano);
         System.out.println("Temporadas: " + s.temporadas);
-        if (s.categoria != null) {
+        if (s.estado != null) {
             System.out.println("Episódios: " + s.episodiosAssistidos + "/" + s.episodios);
         } else {
             System.out.println("Episódios: " + s.episodios);
@@ -1181,8 +1181,8 @@ public class App {
                             }
                             f.genero = new String[generos.size()];
                             f.genero = generos.toArray(f.genero);
-                        } else if (linha.startsWith("Categoria:")) {
-                            f.categoria = linha.substring(11).trim();
+                        } else if (linha.startsWith("Estado:")) {
+                            f.estado = linha.substring(7).trim();
                         }
                     }
 
@@ -1242,8 +1242,8 @@ public class App {
                             }
                             s.genero = new String[generos.size()];
                             s.genero = generos.toArray(s.genero);
-                        } else if (linha.startsWith("Categoria:")) {
-                            s.categoria = linha.substring(11).trim();
+                        } else if (linha.startsWith("Estado:")) {
+                            s.estado = linha.substring(7).trim();
                         }
                     }
                     u.series.add(s);
@@ -1373,7 +1373,7 @@ public class App {
                             pw.append("/");
                         }
                     }
-                    pw.append("\nCategoria: " + f.categoria);
+                    pw.append("\nEstado: " + f.estado);
                     pw.flush();
                     pw.close();
                 }
@@ -1406,7 +1406,7 @@ public class App {
                             pw.append("/");
                         }
                     }
-                    pw.append("\nCategoria: " + s.categoria);
+                    pw.append("\nEstado: " + s.estado);
                     pw.flush();
                     pw.close();
                 }
@@ -1528,9 +1528,9 @@ public class App {
             } else if (opcao == 2) {
                 if (u.filmes != null) {
                     for (Filme f : u.filmes) {
-                        if (f.categoria.equals("Assistindo")) {
+                        if (f.estado.equals("Assistindo")) {
                             escreverFilme(f);
-                            System.out.println("Categoria: " + f.categoria);
+                            System.out.println("Estado: " + f.estado);
                         }
                     }
                 } else {
@@ -1539,9 +1539,9 @@ public class App {
             } else if (opcao == 3) {
                 if (u.filmes != null) {
                     for (Filme f : u.filmes) {
-                        if (f.categoria.equals("Para Assistir")) {
+                        if (f.estado.equals("Para Assistir")) {
                             escreverFilme(f);
-                            System.out.println("Categoria: " + f.categoria);
+                            System.out.println("Estado: " + f.estado);
                         }
                     }
                 } else {
@@ -1550,9 +1550,9 @@ public class App {
             } else if (opcao == 4) {
                 if (u.filmes != null) {
                     for (Filme f : u.filmes) {
-                        if (f.categoria.equals("Concluído")) {
+                        if (f.estado.equals("Concluído")) {
                             escreverFilme(f);
-                            System.out.println("Categoria: " + f.categoria);
+                            System.out.println("Estado: " + f.estado);
                         }
                     }
                 } else {
@@ -1564,13 +1564,13 @@ public class App {
                 int concluido = 0;
                 if (u.filmes != null) {
                     for (Filme f : u.filmes) {
-                        if (f.categoria.equals("Assistindo")) {
+                        if (f.estado.equals("Assistindo")) {
                             assistindo++;
                         }
-                        if (f.categoria.equals("Para Assistir")) {
+                        if (f.estado.equals("Para Assistir")) {
                             paraAssistir++;
                         }
-                        if (f.categoria.equals("Concluído")) {
+                        if (f.estado.equals("Concluído")) {
                             concluido++;
                         }
                     }
@@ -1590,7 +1590,7 @@ public class App {
         for (Filme f : filmes) {
             Filme copia = copiarFilme(f);
             if (f.id == id) {
-                System.out.println("Informe qual categoria quer adicionar esse filme: \n");
+                System.out.println("Informe qual estado quer adicionar esse filme: \n");
                 System.out.println("\n-----------------------" +
                         "\n1) Assistindo" +
                         "\n2) Para Assistir" +
@@ -1599,7 +1599,7 @@ public class App {
                 System.out.println("Opção: ");
                 int opcao = sc.nextInt();
                 if (opcao == 1) {
-                    copia.categoria = "Assistindo";
+                    copia.estado = "Assistindo";
                     System.out.println("Informe quantos minutos do filme você já assistiu: ");
                     int mins = sc.nextInt();
                     copia.tempoAssistido.horas = mins / 60;
@@ -1607,13 +1607,13 @@ public class App {
                     u.filmes.add(copia);
                     gravarFilmeSerieUsuario(u, "filme", raizUsuariosFilmes, "");
                 } else if (opcao == 2) {
-                    copia.categoria = "Para Assistir";
+                    copia.estado = "Para Assistir";
                     copia.tempoAssistido.horas = 0;
                     copia.tempoAssistido.minutos = 0;
                     u.filmes.add(copia);
                     gravarFilmeSerieUsuario(u, "filme", raizUsuariosFilmes, "");
                 } else if (opcao == 3) {
-                    copia.categoria = "Concluído";
+                    copia.estado = "Concluído";
                     copia.tempoAssistido.horas = f.tempo.horas;
                     copia.tempoAssistido.minutos = f.tempo.minutos;
                     u.filmes.add(copia);
@@ -1634,9 +1634,9 @@ public class App {
             } else if (opcao == 2) {
                 if (u.series != null) {
                     for (Serie s : u.series) {
-                        if (s.categoria.equals("Assistindo")) {
+                        if (s.estado.equals("Assistindo")) {
                             escreverSerie(s);
-                            System.out.println("Categoria: " + s.categoria);
+                            System.out.println("Estado: " + s.estado);
                         }
                     }
                 } else {
@@ -1645,9 +1645,9 @@ public class App {
             } else if (opcao == 3) {
                 if (u.series != null) {
                     for (Serie s : u.series) {
-                        if (s.categoria.equals("Para Assistir")) {
+                        if (s.estado.equals("Para Assistir")) {
                             escreverSerie(s);
-                            System.out.println("Categoria: " + s.categoria);
+                            System.out.println("Estado: " + s.estado);
                         }
                     }
                 } else {
@@ -1656,9 +1656,9 @@ public class App {
             } else if (opcao == 4) {
                 if (u.series != null) {
                     for (Serie s : u.series) {
-                        if (s.categoria.equals("Concluída")) {
+                        if (s.estado.equals("Concluída")) {
                             escreverSerie(s);
-                            System.out.println("Categoria: " + s.categoria);
+                            System.out.println("Estado: " + s.estado);
                         }
                     }
                 } else {
@@ -1670,13 +1670,13 @@ public class App {
                 int concluida = 0;
                 if (u.series != null) {
                     for (Serie s : u.series) {
-                        if (s.categoria.equals("Assistindo")) {
+                        if (s.estado.equals("Assistindo")) {
                             assistindo++;
                         }
-                        if (s.categoria.equals("Para Assistir")) {
+                        if (s.estado.equals("Para Assistir")) {
                             paraAssistir++;
                         }
-                        if (s.categoria.equals("Concluída")) {
+                        if (s.estado.equals("Concluída")) {
                             concluida++;
                         }
                     }
@@ -1696,7 +1696,7 @@ public class App {
         for (Serie s : series) {
             Serie copia = copiarSerie(s);
             if (s.id == id) {
-                System.out.println("Informe qual categoria quer adicionar para essa série: \n");
+                System.out.println("Informe qual estado quer adicionar para essa série: \n");
                 System.out.println("\n-----------------------" +
                         "\n1) Assistindo" +
                         "\n2) Para Assistir" +
@@ -1705,7 +1705,7 @@ public class App {
                 System.out.println("Opção: ");
                 int opcao = sc.nextInt();
                 if (opcao == 1) {
-                    copia.categoria = "Assistindo";
+                    copia.estado = "Assistindo";
                     System.out.println("Informe quantos episódios dessa série você já assistiu: ");
                     copia.episodiosAssistidos = sc.nextInt();
                     u.series.add(copia);
@@ -1713,14 +1713,14 @@ public class App {
 
                 }
                 if (opcao == 2) {
-                    copia.categoria = "Para Assistir";
+                    copia.estado = "Para Assistir";
                     copia.episodiosAssistidos = 0;
                     u.series.add(copia);
                     gravarFilmeSerieUsuario(u, "série", "", raizUsuariosSeries);
 
                 }
                 if (opcao == 3) {
-                    copia.categoria = "Concluída";
+                    copia.estado = "Concluída";
                     copia.episodiosAssistidos = s.episodios;
                     u.series.add(copia);
                     gravarFilmeSerieUsuario(u, "série", "", raizUsuariosSeries);
@@ -1737,7 +1737,7 @@ public class App {
         i.data = f.data;
         i.tempo = f.tempo;
         i.genero = f.genero;
-        i.categoria = f.categoria;
+        i.estado = f.estado;
         i.tempoAssistido = new Tempo();
         if (f.tempoAssistido != null) {
             i.tempoAssistido.horas = f.tempoAssistido.horas;
@@ -1758,7 +1758,7 @@ public class App {
         c.temporadas = s.temporadas;
         c.episodios = s.episodios;
         c.genero = s.genero;
-        c.categoria = s.categoria;
+        c.estado = s.estado;
         c.episodiosAssistidos = s.episodiosAssistidos;
         return c;
     }

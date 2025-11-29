@@ -6,5 +6,5 @@ public class Filme {
     Tempo tempo;
     Tempo tempoAssistido;
     String[] genero;
-    String categoria;
+    String estado;
 }

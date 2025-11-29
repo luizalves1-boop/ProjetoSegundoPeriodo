@@ -6,5 +6,5 @@ public class Serie {
     int episodios;
     int episodiosAssistidos;
     String[] genero;
-    String categoria;
+    String estado;
 }
