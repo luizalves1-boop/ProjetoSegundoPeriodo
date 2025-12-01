@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Scanner;
 
@@ -36,10 +37,10 @@ public class App {
                     iniciarResetar(raiz, raizFilmes, raizSeries, raizUsuarios, raizUsuariosFilmes, raizUsuariosSeries, arqIdFilme, arqIdSerie, arqIdUsuario, filmes, series, usuarios);
                     break;
                 case 2:
-                    gerenciarFilmes(filmes, raizFilmes, arqIdFilme);
+                    gerenciarFilmes(filmes, raizFilmes, arqIdFilme, raizUsuariosFilmes, usuarios);
                     break;
                 case 3:
-                    gerenciarSeries(series, raizSeries, arqIdSerie);
+                    gerenciarSeries(series, raizSeries, arqIdSerie, raizUsuariosSeries, usuarios);
                     break;
                 case 4:
                     gerenciarUsuarios(filmes, series, usuarios, raizUsuarios, raizUsuariosFilmes, raizUsuariosSeries, arqIdUsuario);
@@ -272,7 +273,7 @@ public class App {
         }
     }
 
-    public static void gerenciarFilmes(ArrayList<Filme> filmes, String raizFilmes, String arqIdFilme) {
+    public static void gerenciarFilmes(ArrayList<Filme> filmes, String raizFilmes, String arqIdFilme, String raizUsuariosFilmes, ArrayList<Usuario> usuarios) {
         Scanner sc = new Scanner(System.in);
         int opcao;
         do {
@@ -289,7 +290,7 @@ public class App {
                     listarFilme(filmes);
                     break;
                 case 4://atualizar
-                    atualizarFilme(filmes, raizFilmes);
+                    atualizarFilme(filmes, raizFilmes, raizUsuariosFilmes, usuarios);
                     break;
                 case 5://apagar
                     excluirFilme(filmes, raizFilmes);
@@ -609,7 +610,7 @@ public class App {
         }
     }
 
-    public static void atualizarFilme(ArrayList<Filme> filmes, String raizFilmes) {
+    public static void atualizarFilme(ArrayList<Filme> filmes, String raizFilmes, String raizUsuariosFilmes, ArrayList<Usuario> usuarios) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Informe o ID do filme que você quer atualizar: ");
         int id = sc.nextInt();
@@ -624,16 +625,16 @@ public class App {
                 int opcao = sc.nextInt();
                 switch (opcao) {
                     case 1:
-                        editarFilme("nome", filmes, f, raizFilmes);
+                        editarFilme("nome", filmes, f, raizFilmes, raizUsuariosFilmes, usuarios);
                         break;
                     case 2:
-                        editarFilme("data", filmes, f, raizFilmes);
+                        editarFilme("data", filmes, f, raizFilmes, raizUsuariosFilmes, usuarios);
                         break;
                     case 3:
-                        editarFilme("duracao", filmes, f, raizFilmes);
+                        editarFilme("duracao", filmes, f, raizFilmes, raizUsuariosFilmes, usuarios);
                         break;
                     case 4:
-                        editarFilme("generos", filmes, f, raizFilmes);
+                        editarFilme("generos", filmes, f, raizFilmes, raizUsuariosFilmes, usuarios);
                         break;
                 }
 
@@ -641,7 +642,7 @@ public class App {
         }
     }
 
-    public static void editarFilme(String tipo, ArrayList<Filme> filmes, Filme f, String raizFilmes) {
+    public static void editarFilme(String tipo, ArrayList<Filme> filmes, Filme f, String raizFilmes, String raizUsuariosFilmes, ArrayList<Usuario> usuarios) {
         Scanner sc = new Scanner(System.in);
         if (tipo.equals("nome")) {
             System.out.println("Informe o nome do filme: ");
@@ -677,6 +678,12 @@ public class App {
         }
         if (gravarFilme(f, raizFilmes)) {
             leFilme("atualizar", filmes, f, f.id, raizFilmes);
+        }
+        for (Usuario u : usuarios) {
+            u.series.clear();
+            u.filmes.clear();
+            gravarFilmeSerieUsuario(u, "filme", raizUsuariosFilmes, "", f, null);
+            carregarFilmesUsuario(u, raizUsuariosFilmes);
         }
     }
 
@@ -756,7 +763,7 @@ public class App {
         }
     }
 
-    public static void gerenciarSeries(ArrayList<Serie> series, String raizSeries, String arqIdSerie) {
+    public static void gerenciarSeries(ArrayList<Serie> series, String raizSeries, String arqIdSerie, String raizUsuariosSeries, ArrayList<Usuario> usuarios) {
         Scanner sc = new Scanner(System.in);
         int opcao;
         do {
@@ -773,7 +780,7 @@ public class App {
                     listarSerie(series);
                     break;
                 case 4://atualizar
-                    atualizarSerie(series, raizSeries);
+                    atualizarSerie(series, raizSeries, raizUsuariosSeries, usuarios);
                     break;
                 case 5://apagar
                     excluirSerie(series, raizSeries);
@@ -1092,7 +1099,7 @@ public class App {
         }
     }
 
-    public static void atualizarSerie(ArrayList<Serie> series, String raizSeries) {
+    public static void atualizarSerie(ArrayList<Serie> series, String raizSeries, String raizUsuariosSeries, ArrayList<Usuario> usuarios) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Informe o ID da série que você quer atualizar: ");
         int id = sc.nextInt();
@@ -1108,26 +1115,26 @@ public class App {
                 int opcao = sc.nextInt();
                 switch (opcao) {
                     case 1:
-                        editarSerie("nome", series, s, raizSeries);
+                        editarSerie("nome", series, s, raizSeries, raizUsuariosSeries, usuarios);
                         break;
                     case 2:
-                        editarSerie("data", series, s, raizSeries);
+                        editarSerie("data", series, s, raizSeries, raizUsuariosSeries, usuarios);
                         break;
                     case 3:
-                        editarSerie("temporadas", series, s, raizSeries);
+                        editarSerie("temporadas", series, s, raizSeries, raizUsuariosSeries, usuarios);
                         break;
                     case 4:
-                        editarSerie("episodios", series, s, raizSeries);
+                        editarSerie("episodios", series, s, raizSeries, raizUsuariosSeries, usuarios);
                         break;
                     case 5:
-                        editarSerie("generos", series, s, raizSeries);
+                        editarSerie("generos", series, s, raizSeries, raizUsuariosSeries, usuarios);
                         break;
                 }
             }
         }
     }
 
-    public static void editarSerie(String tipo, ArrayList<Serie> series, Serie s, String raizSeries) {
+    public static void editarSerie(String tipo, ArrayList<Serie> series, Serie s, String raizSeries, String raizUsuariosSeries, ArrayList<Usuario> usuarios) {
         Scanner sc = new Scanner(System.in);
         if (tipo.equals("nome")) {
             System.out.println("Informe o nome da série: ");
@@ -1164,6 +1171,10 @@ public class App {
         }
         if (gravarSerie(s, raizSeries)) {
             leSerie("atualizar", series, s, s.id, raizSeries);
+        }
+        for (Usuario u : usuarios) {
+            gravarFilmeSerieUsuario(u, "série", "", raizUsuariosSeries, null, s);
+            carregarSeriesUsuario(u, raizUsuariosSeries);
         }
     }
 
@@ -1456,7 +1467,7 @@ public class App {
     }
 
     public static boolean gravarFilmeSerieUsuario(Usuario u, String tipo, String raizUsuariosFilmes, String
-            raizUsuariosSeries) {
+            raizUsuariosSeries, Filme fl, Serie sr) {
         File dir = new File(raizUsuariosFilmes + u.id + "/");
         if (!dir.exists()) {
             dir.mkdir();
@@ -1468,67 +1479,71 @@ public class App {
         try {
             if (tipo.equals("filme")) {
                 for (Filme f : u.filmes) {
-                    PrintWriter pw = new PrintWriter((raizUsuariosFilmes + u.id + "/") + f.id);
-                    pw.append("ID: " + f.id + "\n");
-                    pw.append("Nome: " + f.nome + "\n");
-                    pw.append("Estreia: ");
-                    if (f.data.dia < 10) {
-                        pw.append("0" + f.data.dia + "/");
-                    } else {
-                        pw.append(f.data.dia + "/");
-                    }
-                    if (f.data.mes < 10) {
-                        pw.append("0" + f.data.mes + "/");
-                    } else {
-                        pw.append(f.data.mes + "/");
-                    }
-                    pw.append(f.data.ano + "\n");
-                    pw.append("Duração: " + f.tempoAssistido.horas + "h " + f.tempoAssistido.minutos + "m/" + f.tempo.horas + "h " + f.tempo.minutos + "m\n");
-                    pw.append("Gêneros: ");
-                    for (int i = 0; i < f.genero.length; i++) {
-                        if (f.genero[i] != null) {
-                            pw.append(f.genero[i]);
+                    if (f.id == fl.id) {
+                        PrintWriter pw = new PrintWriter((raizUsuariosFilmes + u.id + "/") + f.id);
+                        pw.append("ID: " + f.id + "\n");
+                        pw.append("Nome: " + fl.nome + "\n");
+                        pw.append("Estreia: ");
+                        if (fl.data.dia < 10) {
+                            pw.append("0" + fl.data.dia + "/");
+                        } else {
+                            pw.append(fl.data.dia + "/");
                         }
-                        if (i < (f.genero.length - 1) && f.genero[i + 1] != null) {
-                            pw.append("/");
+                        if (fl.data.mes < 10) {
+                            pw.append("0" + fl.data.mes + "/");
+                        } else {
+                            pw.append(fl.data.mes + "/");
                         }
+                        pw.append(fl.data.ano + "\n");
+                        pw.append("Duração: " + f.tempoAssistido.horas + "h " + f.tempoAssistido.minutos + "m/" + fl.tempo.horas + "h " + fl.tempo.minutos + "m\n");
+                        pw.append("Gêneros: ");
+                        for (int i = 0; i < fl.genero.length; i++) {
+                            if (fl.genero[i] != null) {
+                                pw.append(fl.genero[i]);
+                            }
+                            if (i < (fl.genero.length - 1) && fl.genero[i + 1] != null) {
+                                pw.append("/");
+                            }
+                        }
+                        pw.append("\nEstado: " + f.estado);
+                        pw.flush();
+                        pw.close();
                     }
-                    pw.append("\nEstado: " + f.estado);
-                    pw.flush();
-                    pw.close();
                 }
             }
             if (tipo.equals("série")) {
                 for (Serie s : u.series) {
-                    PrintWriter pw = new PrintWriter((raizUsuariosSeries + u.id + "/") + s.id);
-                    pw.append("ID: " + s.id + "\n");
-                    pw.append("Nome: " + s.nome + "\n");
-                    pw.append("Estreia: ");
-                    if (s.data.dia < 10) {
-                        pw.append("0" + s.data.dia + "/");
-                    } else {
-                        pw.append(s.data.dia + "/");
-                    }
-                    if (s.data.mes < 10) {
-                        pw.append("0" + s.data.mes + "/");
-                    } else {
-                        pw.append(s.data.mes + "/");
-                    }
-                    pw.append(s.data.ano + "\n");
-                    pw.append("Temporadas: " + s.temporadas + "\n");
-                    pw.append("Episódios: " + s.episodiosAssistidos + "/" + s.episodios + "\n");
-                    pw.append("Gêneros: ");
-                    for (int i = 0; i < s.genero.length; i++) {
-                        if (s.genero[i] != null) {
-                            pw.append(s.genero[i]);
+                    if (s.id == sr.id) {
+                        PrintWriter pw = new PrintWriter((raizUsuariosSeries + u.id + "/") + s.id);
+                        pw.append("ID: " + s.id + "\n");
+                        pw.append("Nome: " + sr.nome + "\n");
+                        pw.append("Estreia: ");
+                        if (sr.data.dia < 10) {
+                            pw.append("0" + sr.data.dia + "/");
+                        } else {
+                            pw.append(sr.data.dia + "/");
                         }
-                        if (i < (s.genero.length - 1) && s.genero[i + 1] != null) {
-                            pw.append("/");
+                        if (sr.data.mes < 10) {
+                            pw.append("0" + sr.data.mes + "/");
+                        } else {
+                            pw.append(sr.data.mes + "/");
                         }
+                        pw.append(sr.data.ano + "\n");
+                        pw.append("Temporadas: " + sr.temporadas + "\n");
+                        pw.append("Episódios: " + s.episodiosAssistidos + "/" + sr.episodios + "\n");
+                        pw.append("Gêneros: ");
+                        for (int i = 0; i < sr.genero.length; i++) {
+                            if (sr.genero[i] != null) {
+                                pw.append(sr.genero[i]);
+                            }
+                            if (i < (sr.genero.length - 1) && sr.genero[i + 1] != null) {
+                                pw.append("/");
+                            }
+                        }
+                        pw.append("\nEstado: " + s.estado);
+                        pw.flush();
+                        pw.close();
                     }
-                    pw.append("\nEstado: " + s.estado);
-                    pw.flush();
-                    pw.close();
                 }
             }
         } catch (FileNotFoundException e) {
@@ -1741,19 +1756,19 @@ public class App {
                     copia.tempoAssistido.horas = mins / 60;
                     copia.tempoAssistido.minutos = mins % 60;
                     u.filmes.add(copia);
-                    gravarFilmeSerieUsuario(u, "filme", raizUsuariosFilmes, "");
+                    gravarFilmeSerieUsuario(u, "filme", raizUsuariosFilmes, "", null, null);
                 } else if (opcao == 2) {
                     copia.estado = "Para Assistir";
                     copia.tempoAssistido.horas = 0;
                     copia.tempoAssistido.minutos = 0;
                     u.filmes.add(copia);
-                    gravarFilmeSerieUsuario(u, "filme", raizUsuariosFilmes, "");
+                    gravarFilmeSerieUsuario(u, "filme", raizUsuariosFilmes, "", null, null);
                 } else if (opcao == 3) {
                     copia.estado = "Concluído";
                     copia.tempoAssistido.horas = f.tempo.horas;
                     copia.tempoAssistido.minutos = f.tempo.minutos;
                     u.filmes.add(copia);
-                    gravarFilmeSerieUsuario(u, "filme", raizUsuariosFilmes, "");
+                    gravarFilmeSerieUsuario(u, "filme", raizUsuariosFilmes, "", null, null);
                 }
             }
         }
@@ -1848,21 +1863,21 @@ public class App {
                     System.out.println("Informe quantos episódios dessa série você já assistiu: ");
                     copia.episodiosAssistidos = sc.nextInt();
                     u.series.add(copia);
-                    gravarFilmeSerieUsuario(u, "série", "", raizUsuariosSeries);
+                    gravarFilmeSerieUsuario(u, "série", "", raizUsuariosSeries, null, null);
 
                 }
                 if (opcao == 2) {
                     copia.estado = "Para Assistir";
                     copia.episodiosAssistidos = 0;
                     u.series.add(copia);
-                    gravarFilmeSerieUsuario(u, "série", "", raizUsuariosSeries);
+                    gravarFilmeSerieUsuario(u, "série", "", raizUsuariosSeries, null, null);
 
                 }
                 if (opcao == 3) {
                     copia.estado = "Concluída";
                     copia.episodiosAssistidos = s.episodios;
                     u.series.add(copia);
-                    gravarFilmeSerieUsuario(u, "série", "", raizUsuariosSeries);
+                    gravarFilmeSerieUsuario(u, "série", "", raizUsuariosSeries, null, null);
                 }
 
             }
