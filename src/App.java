@@ -177,7 +177,6 @@ public class App {
         System.out.println("Opção: ");
     }
 
-
     public static int leId(String arquivo) {
         BufferedReader br;
         try {
@@ -305,7 +304,7 @@ public class App {
         } while (opcao != 6);
     }
 
-    public static Filme adicionarEditarFilme(int id) {
+    public static Filme adicionarFilme(int id) {
         Scanner sc = new Scanner(System.in);
         Filme f = new Filme();
         f.id = id;
@@ -375,7 +374,7 @@ public class App {
 
     public static void cadastrarFilme(String tipo, ArrayList<Filme> filmes, String raizFilmes, String arqIdFilme) {
         int id = leId(arqIdFilme);
-        Filme f = adicionarEditarFilme(id);
+        Filme f = adicionarFilme(id);
         int id2 = f.id;
         if (gravarFilme(f, raizFilmes)) {
             leFilme("adicionar", filmes, f, id, raizFilmes);
@@ -786,7 +785,7 @@ public class App {
         } while (opcao != 6);
     }
 
-    public static Serie adicionarEditarSerie(int id) {
+    public static Serie adicionarSerie(int id) {
         Scanner sc = new Scanner(System.in);
         Serie s = new Serie();
         s.id = id;
@@ -857,7 +856,7 @@ public class App {
 
     public static void cadastrarSerie(String tipo, ArrayList<Serie> series, String raizSeries, String arqIdSerie) {
         int id = leId(arqIdSerie);
-        Serie s = adicionarEditarSerie(id);
+        Serie s = adicionarSerie(id);
         int id2 = s.id;
         if (gravarSerie(s, raizSeries)) {
             leSerie("adicionar", series, s, id, raizSeries);
