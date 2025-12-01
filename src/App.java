@@ -1349,7 +1349,7 @@ public class App {
         if (!dir.exists()) {
             dir.mkdir();
         }
-        dir = new File( raizUsuariosSeries + u.id + "/");
+        dir = new File(raizUsuariosSeries + u.id + "/");
         if (!dir.exists()) {
             dir.mkdir();
         }
@@ -1516,13 +1516,23 @@ public class App {
     }
 
     public static void infoUsuario(Usuario u) {
+        int tempo = 0;
+        int eps = 0;
         System.out.println("\nPerfil");
         System.out.println("-----------------------"
                 + "\nNome: " + u.nome
                 + "\nEmail: " + u.email
                 + "\nTelefone: " + u.telefone
-                + "\nSenha: " + u.senha
-                + "\n-----------------------");
+                + "\nSenha: " + u.senha);
+        for(Filme f : u.filmes){
+            tempo+= f.tempoAssistido.horas * 60 + f.tempoAssistido.minutos;
+        }
+        System.out.print("Horas totais: " + tempo/60 + "h " + tempo%60 + "m");
+        for(Serie s : u.series){
+            eps+= s.episodiosAssistidos;
+        }
+        System.out.print("\nEpisódios totais: " + eps);
+        System.out.println("\n-----------------------");
     }
 
     public static void f(ArrayList<Filme> filmes, Usuario u, String raizUsuariosFilmes) {
