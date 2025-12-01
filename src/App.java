@@ -334,7 +334,6 @@ public class App {
             opcao = sc.next().charAt(0);
             sc.nextLine();
         } while (opcao == 's' && i <= 10);
-
         return f;
     }
 
@@ -389,13 +388,6 @@ public class App {
             System.out.println("Não foi possível gravar o filme!");
         }
         System.out.println();
-    }
-
-    public static void editarFilme(ArrayList<Filme> filmes, String raizFilmes, int id) {
-        Filme f = adicionarEditarFilme(id);
-        if (gravarFilme(f, raizFilmes)) {
-            leFilme("atualizar", filmes, f, id, raizFilmes);
-        }
     }
 
     public static void leFilme(String tipo, ArrayList<Filme> filmes, Filme f, int id, String arquivo) {
@@ -624,9 +616,68 @@ public class App {
         int id = sc.nextInt();
         for (Filme f : filmes) {
             if (f.id == id) {
-                System.out.println("Informe as novas informações do filme");
-                editarFilme(filmes, raizFilmes, id);
+                System.out.println("Escolhar o que você quer atualizar do filme : ");
+                System.out.println("1) Nome"
+                        + "\n2) Data"
+                        + "\n3) Duração"
+                        + "\n4) Gêneros");
+                System.out.println("Opção: ");
+                int opcao = sc.nextInt();
+                switch (opcao) {
+                    case 1:
+                        editarFilme("nome", filmes, f, raizFilmes);
+                        break;
+                    case 2:
+                        editarFilme("data", filmes, f, raizFilmes);
+                        break;
+                    case 3:
+                        editarFilme("duracao", filmes, f, raizFilmes);
+                        break;
+                    case 4:
+                        editarFilme("generos", filmes, f, raizFilmes);
+                        break;
+                }
+
             }
+        }
+    }
+
+    public static void editarFilme(String tipo, ArrayList<Filme> filmes, Filme f, String raizFilmes) {
+        Scanner sc = new Scanner(System.in);
+        if (tipo.equals("nome")) {
+            System.out.println("Informe o nome do filme: ");
+            f.nome = sc.nextLine();
+        }
+        if (tipo.equals("data")) {
+            System.out.println("Informe a data de estréia do filme (DD/MM/AAAA): ");
+            int data = sc.nextInt();
+            f.data = new Estreia();
+            f.data.dia = data / 1000000;
+            f.data.mes = (data % 1000000) / 10000;
+            f.data.ano = (data % 1000000) % 10000;
+        }
+        if (tipo.equals("duracao")) {
+            System.out.println("Informe qual a minutagem total do filme: ");
+            int min = sc.nextInt();
+            f.tempo = new Tempo();
+            f.tempo.horas = min / 60;
+            f.tempo.minutos = min % 60;
+        }
+        if (tipo.equals("generos")) {
+            f.genero = new String[10];
+            int i = 0;
+            char opcao;
+            do {
+                System.out.print("Gênero: ");
+                f.genero[i] = sc.nextLine();
+                i++;
+                System.out.print("Quer adicionar mais um gênero a esse filme? (s/n): ");
+                opcao = sc.next().charAt(0);
+                sc.nextLine();
+            } while (opcao == 's' && i <= 10);
+        }
+        if (gravarFilme(f, raizFilmes)) {
+            leFilme("atualizar", filmes, f, f.id, raizFilmes);
         }
     }
 
@@ -819,13 +870,6 @@ public class App {
             System.out.println("Não foi possível gravar a série!");
         }
         System.out.println();
-    }
-
-    public static void editarSerie(ArrayList<Serie> series, String raizSeries, int id) {
-        Serie s = adicionarEditarSerie(id);
-        if (gravarSerie(s, raizSeries)) {
-            leSerie("atualizar", series, s, id, raizSeries);
-        }
     }
 
     public static void leSerie(String tipo, ArrayList<Serie> series, Serie s, int id, String arquivo) {
@@ -1055,9 +1099,72 @@ public class App {
         int id = sc.nextInt();
         for (Serie s : series) {
             if (s.id == id) {
-                System.out.println("Informe as novas informações da série");
-                editarSerie(series, raizSeries, id);
+                System.out.println("Escolhar o que você quer atualizar do filme : ");
+                System.out.println("1) Nome"
+                        + "\n2) Data"
+                        + "\n3) Temporadas"
+                        + "\n4) Episódios"
+                        + "\n5) Gêneros");
+                System.out.println("Opção: ");
+                int opcao = sc.nextInt();
+                switch (opcao) {
+                    case 1:
+                        editarSerie("nome", series, s, raizSeries);
+                        break;
+                    case 2:
+                        editarSerie("data", series, s, raizSeries);
+                        break;
+                    case 3:
+                        editarSerie("temporadas", series, s, raizSeries);
+                        break;
+                    case 4:
+                        editarSerie("episodios", series, s, raizSeries);
+                        break;
+                    case 5:
+                        editarSerie("generos", series, s, raizSeries);
+                        break;
+                }
             }
+        }
+    }
+
+    public static void editarSerie(String tipo, ArrayList<Serie> series, Serie s, String raizSeries) {
+        Scanner sc = new Scanner(System.in);
+        if (tipo.equals("nome")) {
+            System.out.println("Informe o nome da série: ");
+            s.nome = sc.nextLine();
+        }
+        if (tipo.equals("data")) {
+            System.out.println("Informe a data de estréia da série (DD/MM/AAAA): ");
+            int data = sc.nextInt();
+            s.data = new Estreia();
+            s.data.dia = data / 1000000;
+            s.data.mes = (data % 1000000) / 10000;
+            s.data.ano = (data % 1000000) % 10000;
+        }
+        if (tipo.equals("temporadas")) {
+            System.out.println("Informe quantas temporadas têm a série: ");
+            s.temporadas = sc.nextInt();
+        }
+        if (tipo.equals("episodios")) {
+            System.out.println("Informe quantos episódios totais têm a série: ");
+            s.episodios = sc.nextInt();
+        }
+        if (tipo.equals("generos")) {
+            s.genero = new String[10];
+            int i = 0;
+            char opcao;
+            do {
+                System.out.print("Gênero: ");
+                s.genero[i] = sc.nextLine();
+                i++;
+                System.out.print("Quer adicionar mais um gênero a essa série? (s/n): ");
+                opcao = sc.next().charAt(0);
+                sc.nextLine();
+            } while (opcao == 's' && i <= 10);
+        }
+        if (gravarSerie(s, raizSeries)) {
+            leSerie("atualizar", series, s, s.id, raizSeries);
         }
     }
 
@@ -1081,7 +1188,8 @@ public class App {
 
 //Usuários
 
-    public static void carregarUsuariosNoArray(ArrayList<Usuario> usuarios, String raizUsuarios, String raizUsuariosFilmes, String raizUsuariosSeries) {
+    public static void carregarUsuariosNoArray(ArrayList<Usuario> usuarios, String raizUsuarios, String
+            raizUsuariosFilmes, String raizUsuariosSeries) {
         File dir = new File(raizUsuarios);
         if (!dir.exists() || !dir.isDirectory()) {
             return;
@@ -1254,7 +1362,9 @@ public class App {
         }
     }
 
-    public static void gerenciarUsuarios(ArrayList<Filme> filmes, ArrayList<Serie> series, ArrayList<Usuario> usuarios, String raizUsuarios, String raizUsuariosFilmes, String raizUsuariosSeries, String arqIdUsuario) {
+    public static void gerenciarUsuarios
+            (ArrayList<Filme> filmes, ArrayList<Serie> series, ArrayList<Usuario> usuarios, String
+                    raizUsuarios, String raizUsuariosFilmes, String raizUsuariosSeries, String arqIdUsuario) {
         Scanner sc = new Scanner(System.in);
         int opcao;
         do {
@@ -1346,7 +1456,8 @@ public class App {
         return true;
     }
 
-    public static boolean gravarFilmeSerieUsuario(Usuario u, String tipo, String raizUsuariosFilmes, String raizUsuariosSeries) {
+    public static boolean gravarFilmeSerieUsuario(Usuario u, String tipo, String raizUsuariosFilmes, String
+            raizUsuariosSeries) {
         File dir = new File(raizUsuariosFilmes + u.id + "/");
         if (!dir.exists()) {
             dir.mkdir();
@@ -1442,7 +1553,9 @@ public class App {
         System.out.println();
     }
 
-    public static void logarUsuario(ArrayList<Filme> filmes, ArrayList<Serie> series, ArrayList<Usuario> usuarios, String raizUsuariosFilmes, String raizUsuariosSeries) {
+    public static void logarUsuario
+            (ArrayList<Filme> filmes, ArrayList<Serie> series, ArrayList<Usuario> usuarios, String
+                    raizUsuariosFilmes, String raizUsuariosSeries) {
         Scanner sc = new Scanner(System.in);
         Usuario u = loginUsuario(usuarios);
         int opcao = 0;
@@ -1526,12 +1639,12 @@ public class App {
                 + "\nEmail: " + u.email
                 + "\nTelefone: " + u.telefone
                 + "\nSenha: " + u.senha);
-        for(Filme f : u.filmes){
-            tempo+= f.tempoAssistido.horas * 60 + f.tempoAssistido.minutos;
+        for (Filme f : u.filmes) {
+            tempo += f.tempoAssistido.horas * 60 + f.tempoAssistido.minutos;
         }
-        System.out.print("Horas totais: " + tempo/60 + "h " + tempo%60 + "m");
-        for(Serie s : u.series){
-            eps+= s.episodiosAssistidos;
+        System.out.print("Horas totais: " + tempo / 60 + "h " + tempo % 60 + "m");
+        for (Serie s : u.series) {
+            eps += s.episodiosAssistidos;
         }
         System.out.print("\nEpisódios totais: " + eps);
         System.out.println("\n-----------------------");
