@@ -1302,6 +1302,8 @@ public class App {
         boolean jaCadastrado = false;
         boolean valido = false;
         do {
+            valido = false;
+            jaCadastrado = false;
             email = sc.nextLine();
             for (Usuario u : usuarios) {
                 if (email.equals(u.email)) {
@@ -1317,12 +1319,12 @@ public class App {
                 if (arroba != 1) {
                     System.out.println("Esse email não é válido, informe outro: ");
                 } else {
+                    valido = true;
                     return email;
                 }
             } else {
                 System.out.println("Esse email já foi cadastrado, tente outro: ");
             }
-            jaCadastrado = false;
         } while (!valido);
         return email;
     }
