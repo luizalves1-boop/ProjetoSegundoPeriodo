@@ -172,8 +172,9 @@ public class App {
                 "\n2) Assistindo" +
                 "\n3) Para Assistir" +
                 "\n4) Concluídos/Concluídas" +
-                "\n5) Informações Totais" +
-                "\n6) Voltar" +
+                "\n5) Todos/Todas" +
+                "\n6) Informações Totais" +
+                "\n7) Voltar" +
                 "\n-----------------------");
         System.out.println("Opção: ");
     }
@@ -680,8 +681,6 @@ public class App {
             leFilme("atualizar", filmes, f, f.id, raizFilmes);
         }
         for (Usuario u : usuarios) {
-            u.series.clear();
-            u.filmes.clear();
             gravarFilmeSerieUsuario(u, "filme", raizUsuariosFilmes, "", f, null);
             carregarFilmesUsuario(u, raizUsuariosFilmes);
         }
@@ -1710,6 +1709,15 @@ public class App {
                     return;
                 }
             } else if (opcao == 5) {
+                if (u.filmes != null) {
+                    for (Filme f : u.filmes) {
+                        System.out.println();
+                        escreverFilme(f);
+                        System.out.println("Estado: " + f.estado);
+                    }
+                } else
+                    return;
+            } else if (opcao == 6) {
                 int assistindo = 0;
                 int paraAssistir = 0;
                 int concluido = 0;
@@ -1725,12 +1733,12 @@ public class App {
                             concluido++;
                         }
                     }
-                    System.out.println("Filmes Assistindo: " + assistindo);
+                    System.out.println("\nFilmes Assistindo: " + assistindo);
                     System.out.println("Filmes Para Assistir: " + paraAssistir);
                     System.out.println("Filmes Concluídos: " + concluido);
                 }
             }
-        } while (opcao != 6);
+        } while (opcao != 7);
     }
 
     public static void adicionarEditarFilme(ArrayList<Filme> filmes, Usuario u, String raizUsuariosFilmes) {
@@ -1756,19 +1764,19 @@ public class App {
                     copia.tempoAssistido.horas = mins / 60;
                     copia.tempoAssistido.minutos = mins % 60;
                     u.filmes.add(copia);
-                    gravarFilmeSerieUsuario(u, "filme", raizUsuariosFilmes, "", null, null);
+                    gravarFilmeSerieUsuario(u, "filme", raizUsuariosFilmes, "", f, null);
                 } else if (opcao == 2) {
                     copia.estado = "Para Assistir";
                     copia.tempoAssistido.horas = 0;
                     copia.tempoAssistido.minutos = 0;
                     u.filmes.add(copia);
-                    gravarFilmeSerieUsuario(u, "filme", raizUsuariosFilmes, "", null, null);
+                    gravarFilmeSerieUsuario(u, "filme", raizUsuariosFilmes, "", f, null);
                 } else if (opcao == 3) {
                     copia.estado = "Concluído";
                     copia.tempoAssistido.horas = f.tempo.horas;
                     copia.tempoAssistido.minutos = f.tempo.minutos;
                     u.filmes.add(copia);
-                    gravarFilmeSerieUsuario(u, "filme", raizUsuariosFilmes, "", null, null);
+                    gravarFilmeSerieUsuario(u, "filme", raizUsuariosFilmes, "", f, null);
                 }
             }
         }
@@ -1819,6 +1827,15 @@ public class App {
                     return;
                 }
             } else if (opcao == 5) {
+                if (u.filmes != null) {
+                    for (Serie s : u.series) {
+                        System.out.println();
+                        escreverSerie(s);
+                        System.out.println("Estado: " + s.estado);
+                    }
+                } else
+                    return;
+            } else if (opcao == 6) {
                 int assistindo = 0;
                 int paraAssistir = 0;
                 int concluida = 0;
@@ -1834,7 +1851,7 @@ public class App {
                             concluida++;
                         }
                     }
-                    System.out.println("Séries Assistindo: " + assistindo);
+                    System.out.println("\nSéries Assistindo: " + assistindo);
                     System.out.println("Séries Para Assistir: " + paraAssistir);
                     System.out.println("Séries Concluídas: " + concluida);
                 }
@@ -1863,21 +1880,21 @@ public class App {
                     System.out.println("Informe quantos episódios dessa série você já assistiu: ");
                     copia.episodiosAssistidos = sc.nextInt();
                     u.series.add(copia);
-                    gravarFilmeSerieUsuario(u, "série", "", raizUsuariosSeries, null, null);
+                    gravarFilmeSerieUsuario(u, "série", "", raizUsuariosSeries, null, s);
 
                 }
                 if (opcao == 2) {
                     copia.estado = "Para Assistir";
                     copia.episodiosAssistidos = 0;
                     u.series.add(copia);
-                    gravarFilmeSerieUsuario(u, "série", "", raizUsuariosSeries, null, null);
+                    gravarFilmeSerieUsuario(u, "série", "", raizUsuariosSeries, null, s);
 
                 }
                 if (opcao == 3) {
                     copia.estado = "Concluída";
                     copia.episodiosAssistidos = s.episodios;
                     u.series.add(copia);
-                    gravarFilmeSerieUsuario(u, "série", "", raizUsuariosSeries, null, null);
+                    gravarFilmeSerieUsuario(u, "série", "", raizUsuariosSeries, null, s);
                 }
 
             }
